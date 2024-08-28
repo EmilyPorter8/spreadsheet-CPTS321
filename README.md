@@ -1,6 +1,7 @@
 # CptS321-Emily-Porter-HWS
 
-
+Emily Porter
+11741612
 
 ## Getting started
 
