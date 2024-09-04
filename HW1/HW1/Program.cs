@@ -14,8 +14,10 @@ namespace HW1
             Console.WriteLine("BST IMPLEMENTATION");
             Console.WriteLine("\nPlease enter list of integers:");
             string userList = Console.ReadLine();
-
+            BST userBST = new BST(userList);
             //call BST
+            userBST.Print();
+            Console.ReadKey();
         }
     }
 }
