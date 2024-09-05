@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Emily Porter
+//011741612
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,15 +14,19 @@ namespace HW1
         static void Main()
         {
             Console.WriteLine("BST IMPLEMENTATION");
-            Console.WriteLine("\nPlease enter list of integers:");
-            //string userList = Console.ReadLine();
-            string testlist = "0 28 3 3 49 56 92 30 2 10 39";
-            string testlist1 = "0 28 3 49";
-            // BST userBST = new BST(userList);
-            BST userBST = new BST(testlist1);
-            userBST.Print();
             Console.WriteLine();
-            userBST.Statistics();
+            Console.WriteLine("\nPlease enter list of integers in the range[0,100], seperated by spaces:"); 
+            string userList = Console.ReadLine(); //grab input string from user
+
+            BST userBST = new BST(userList); //create BST with string input
+
+            userBST.Print(); //print out tree from least to greatest
+            Console.WriteLine();
+            Console.WriteLine();
+
+            userBST.Statistics(); //print statistics of tree
+            Console.WriteLine();
+
             Console.WriteLine("Please enter a key");
             Console.ReadKey();
         }
