@@ -10,10 +10,34 @@ namespace HW1
     public class BST
     {
         //members
+        /*************************************************************
+        * Attribute: Root                                      
+        * Summary:  Root node of the BST         
+        * Parameters:                
+        * Returns:    N/A                  
+        * Exceptions:                                                   
+        *************************************************************/
         protected Node Root;
 
         //constructors
+        /*************************************************************
+        * Function: BST()                                       
+        * Summary:           
+        * Parameters:                
+        * Returns:    N/A                  
+        * Exceptions:                                                   
+        *************************************************************/
         public BST() { }
+
+        /*************************************************************
+        * Function: public BST(string userInput)                                      
+        * Summary:  constructor for BST, takes user input, splits it up and converts
+        *           to integer, then adds to BST
+        * Parameters: needs user input               
+        * Returns:    completed tree                  
+        * Exceptions:                                                   
+        *************************************************************/
+
         public BST(string userInput) 
         {
             string[] userNumbers= userInput.Split(' ');
@@ -30,6 +54,14 @@ namespace HW1
 
 
         //functions
+
+        /*************************************************************
+        * Function: public void Add(float newData)                                       
+        * Summary:  calls Add helper function if root is null, checks for duplicates         
+        * Parameters: new data  
+        * Returns:  BST with new node with new data               
+        * Exceptions:                                                   
+        *************************************************************/
         public void Add(float newData)
         {
             //need to check for duplicates
@@ -47,6 +79,14 @@ namespace HW1
             else
             { Console.WriteLine("Duplicate of " + newData+" found, not added to tree"); }
         }
+
+        /*************************************************************
+        * Function: private void Add(Node pCur, float newData)                                       
+        * Summary:           
+        * Parameters:                
+        * Returns:    N/A                  
+        * Exceptions:                                                   
+        *************************************************************/
         private void Add(Node pCur, float newData)
         {
             if (pCur.Data > newData)
@@ -114,7 +154,8 @@ namespace HW1
             Console.WriteLine("Statistics:");
             
             Console.WriteLine("Amount of nodes in tree:" + Count(Root));
-            
+            Console.WriteLine("Number of levels in tree:" + NumberLevels(Root));
+
         }
 
         private int Count(Node pCur)
@@ -128,7 +169,28 @@ namespace HW1
             }
         }
 
+        private int NumberLevels(Node pCur)
+        {
+            if (pCur == null)
+            { return 0; }
+            else
+            {
+                int left = NumberLevels(pCur.Left);
+                int right = NumberLevels(pCur.Right);
+                if (left > right)
+                {
+                    return 1 + left;
+                }
+                else
+                {
+                    return 1 + right;
+                }
+                //return 1 + Math.Max(NumberLevels(pCur.Left), NumberLevels(pCur.Right));
+            }
 
-      
+        }
+
+
+
     }
 }
