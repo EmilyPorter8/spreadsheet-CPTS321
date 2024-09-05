@@ -17,27 +17,20 @@ namespace HW1
         public BST(string userInput) 
         {
             string[] userNumbers= userInput.Split(' ');
-            foreach (string s in userNumbers)
-            { Add(float.Parse(s));
+            if (userNumbers[0] != "")
+            {
+                foreach (string s in userNumbers)
+                {
+                    Add(float.Parse(s));
+                }
             }
+            else
+            { Root = null; }
         }
 
-        //~BST() {
-        //    DeleteBST(Root);
-        //}
-
-        //public virtual void DeleteBST(Node pCur)
-        //{
-        //    if (pCur != null)
-        //    {
-        //        DeleteBST(pCur.Left);
-        //        DeleteBST(pCur.Right);
-       
-        //    }
-        //}
 
         //functions
-        public virtual void Add(float newData)
+        public void Add(float newData)
         {
             //need to check for duplicates
             if (Contains(newData) == false)
@@ -52,28 +45,33 @@ namespace HW1
                 }
             }
             else
-            { Console.WriteLine("Duplicate found, not added to tree"); }
+            { Console.WriteLine("Duplicate of " + newData+" found, not added to tree"); }
         }
-        public virtual void Add(Node pCur, float newData)
+        private void Add(Node pCur, float newData)
         {
             if (pCur.Data > newData)
             {
                 if (pCur.Left == null)
-                { pCur.Left = new Node(newData); }
-                else { Add(pCur.Left, newData); }
+                {
+                    pCur.Left = new Node(newData); }
+                else { 
+                    Add(pCur.Left, newData); }
             }
             else { // new data is greater than pCur
-                if (pCur.Right == null)
-                { pCur.Right = new Node(newData); }
-                else { Add(pCur.Right, newData); }
+                if (pCur.Right == null){ 
+                    pCur.Right = new Node(newData);
+                }
+                else { 
+                    Add(pCur.Right, newData);
+                }
             }
         }
 
-        public virtual bool Contains(float newData)
+        public bool Contains(float newData)
         {
-            return Contains(Root, newData);
+            return Contains(Root, newData); //call helper
         }
-        public virtual bool Contains(Node pCur, float newData)
+        private bool Contains(Node pCur, float newData)
         {
             if (pCur == null)
             {
@@ -98,8 +96,8 @@ namespace HW1
             }
         }
 
-        public virtual void Print() { Console.WriteLine("Least to Greatest in BST:"); Print(Root); }
-        public virtual void Print(Node pCur)
+        public void Print() { Console.WriteLine("Least to Greatest in BST:"); Print(Root); }
+        private void Print(Node pCur)
         {
             if (pCur != null)
             { Print(pCur.Left);
@@ -108,5 +106,29 @@ namespace HW1
                 Print(pCur.Right);
             }
         }
+
+        //statistics
+        public void Statistics()
+        {
+            
+            Console.WriteLine("Statistics:");
+            
+            Console.WriteLine("Amount of nodes in tree:" + Count(Root));
+            
+        }
+
+        private int Count(Node pCur)
+        {
+            if (pCur == null)
+            {
+                return 0;
+            }
+            else {
+                return 1 + Count(pCur.Left) + Count(pCur.Right);
+            }
+        }
+
+
+      
     }
 }
