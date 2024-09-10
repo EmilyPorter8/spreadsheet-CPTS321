@@ -7,7 +7,8 @@ namespace Form1
             InitializeComponent();
             RunDistinctIntegers();
         }
-        private static void RunDistinctIntegers() 
+
+        private static void RunDistinctIntegers()
         {
         }
     }
