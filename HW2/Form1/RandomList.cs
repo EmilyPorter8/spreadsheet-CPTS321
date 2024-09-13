@@ -58,10 +58,13 @@ namespace Form1
         }
 
         /// <summary>
-        /// Currently skeleton code.
+        /// Checks for distinct integers using hash implementation.
         /// </summary>
+        /// <parameters>
+        /// Need random list.
+        /// </parameters>
         /// <returns>
-        /// Right now, doesnt return anything. In future will return the number of distint integers in list.
+        /// Number of distinct integers.
         /// </returns>
         public int HashSetDistinct()
         {
@@ -75,6 +78,12 @@ namespace Form1
             return result.Count;
         }
 
+        /// <summary>
+        /// currently skeleton code.
+        /// </summary>
+        /// <returns>
+        /// Will return number of distinct integers.
+        /// </returns>
         public int O1StorageDistinct()
         {
 

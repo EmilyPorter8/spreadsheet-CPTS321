@@ -70,5 +70,31 @@ namespace HW2Test
             // list has ten distinct integers
             Assert.That(this.testList.HashSetDistinct(), Is.EqualTo(0));
         }
+
+        /// <summary>
+        /// Normal Test if O1StorageDistinct() will correctly determine # of distinct integers.
+        /// </summary>
+        [Test]
+        public void TestNormalO1Distinct()
+        {
+            List<int> newList = [1, 1, 2, 2, 2, 5, 6, 123, 102, 99, 98, 3, 4];
+            this.testList.SetList(newList);
+
+            // list has ten distinct integers
+            Assert.That(this.testList.O1StorageDistinct(), Is.EqualTo(10));
+        }
+
+        /// <summary>
+        /// Boundary test to see if program responds normally.
+        /// </summary>
+        [Test]
+        public void TestBoundaryO1Distinct()
+        {
+            List<int> newList = [];
+            this.testList.SetList(newList);
+
+            // list has ten distinct integers
+            Assert.That(this.testList.O1StorageDistinct(), Is.EqualTo(0));
+        }
     }
 }
