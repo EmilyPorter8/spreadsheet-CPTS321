@@ -3,6 +3,7 @@
 namespace Form1
 {
     using System;
+
     /// <summary>
     /// Form1 inherits from Form base class.
     /// </summary>
@@ -27,16 +28,16 @@ namespace Form1
             string text = "1. Hash set method: ";
             RandomList randomList = new RandomList();
             text += randomList.HashSetDistinct();
-            text += " unique numbers\n";
-            text += "\nTime complexity for this is linear or O(n), since the" +
+            text += " unique numbers";
+            text += "\r\n    Time complexity for this is linear or O(n), since the " +
                 "total cost of HashSetDistinct() = 1(for the initilization of hash set) + n(iterating through list) + 1(return)+ a couple other integer operations = O(n)";
 
-            text += "\n2. O(1) storage method: ";
-            text += randomList.O1StorageDistinct();
+            text += "\r\n2. O(1) storage method: ";
+            text += randomList.OStorageDistinct();
             text += " unique numbers";
-            // text += "\n3. Sorted method: "
-            // text += randomList.SortedDistinct();
-            // text += " unique methods"
+            text += "\r\n3. Sorted method: ";
+            text += randomList.SortedDistinct();
+            text += " unique methods";
             return text;
         }
 
@@ -51,7 +52,6 @@ namespace Form1
         /// </param>
         private void Form1_Load(object sender, EventArgs e)
         {
-            //textBox1.Text = "1. H";
         }
     }
 }

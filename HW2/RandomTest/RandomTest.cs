@@ -1,11 +1,8 @@
 // Emily Porter
 // 011741612
-
-using Form1;
-
 namespace HW2Test
 {
-// using NUnit.Framework;
+    using Form1;
 
     /// <summary>
     /// RandomTest class to test all methods in RandomList class.
@@ -72,29 +69,56 @@ namespace HW2Test
         }
 
         /// <summary>
+        /// Similiar issue to the sorted implementation, I thought this would generate an error, but
+        /// this implementation of distinct can work with negative numbers. I am unsure what an
+        /// exception test case should look like.
+        /// </summary>
+        [Test]
+        public void TestExceptionHashSetDistinct()
+        {
+            List<int> newList = [-1, -2, -50, -33];
+            this.testList.SetList(newList);
+            Assert.That(this.testList.HashSetDistinct(), Is.EqualTo(4));
+            // Assert.Throws<InvalidOperationException>(() => this.testList.O1StorageDistinct());
+        }
+
+        /// <summary>
         /// Normal Test if O1StorageDistinct() will correctly determine # of distinct integers.
         /// </summary>
         [Test]
-        public void TestNormalO1Distinct()
+        public void TestNormalOStorageDistinct()
         {
             List<int> newList = [1, 1, 2, 2, 2, 5, 6, 123, 102, 99, 98, 3, 4];
             this.testList.SetList(newList);
 
             // list has ten distinct integers
-            Assert.That(this.testList.O1StorageDistinct(), Is.EqualTo(10));
+            Assert.That(this.testList.OStorageDistinct(), Is.EqualTo(10));
         }
 
         /// <summary>
         /// Boundary test to see if program responds normally.
         /// </summary>
         [Test]
-        public void TestBoundaryO1Distinct()
+        public void TestBoundaryOStorageDistinct()
         {
             List<int> newList = [];
             this.testList.SetList(newList);
 
             // list has ten distinct integers
-            Assert.That(this.testList.O1StorageDistinct(), Is.EqualTo(0));
+            Assert.That(this.testList.OStorageDistinct(), Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// Similiar issue to the sorted implementation, I thought this would generate an error, but it just returns
+        /// the incorrect value.I am unsure what an exception test case should look like.
+        /// </summary>
+        [Test]
+        public void TestExceptionOStorageDistinct()
+        {
+            List<int> newList = [-1, -2, -50, -33];
+            this.testList.SetList(newList);
+            Assert.That(this.testList.OStorageDistinct(), Is.EqualTo(0));
+           // Assert.Throws<InvalidOperationException>(() => this.testList.O1StorageDistinct());
         }
 
         /// <summary>
@@ -121,6 +145,19 @@ namespace HW2Test
 
             // list has ten distinct integers
             Assert.That(this.testList.SortedDistinct(), Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// I thought this would generate an error, but this implementation of distinct
+        /// can work with negative numbers. I am unsure what an exception test case should
+        /// look like.
+        /// </summary>
+        [Test]
+        public void TestExceptionSortedDistinct()
+        {
+            List<int> newList = [-1, -2, -50, -33];
+            this.testList.SetList(newList);
+            Assert.That(this.testList.SortedDistinct(), Is.EqualTo(4));
         }
     }
 }

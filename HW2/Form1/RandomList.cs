@@ -1,13 +1,14 @@
 ﻿// Emily Porter
 // 11741612
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Form1
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Class containing the Random list and the methods for finding the amount of distint integers in the list.
     /// </summary>
@@ -84,7 +85,7 @@ namespace Form1
         /// <returns>
         /// Returns number of distinct integers.
         /// </returns>
-        public int O1StorageDistinct()
+        public int OStorageDistinct()
         {
             int index = 0; // for iterating through list
             int count = 0; // for counting the distinct integers
@@ -95,7 +96,7 @@ namespace Form1
             {
                 foreach (int item in this.list) // iterate through list.
                 {
-                    if (index == item) // once distinct integer has been found, increase count and break the loop. 
+                    if (index == item) // once distinct integer has been found, increase count and break the loop.
                     {
                         count++;
                         break;
@@ -109,14 +110,27 @@ namespace Form1
         }
 
         /// <summary>
-        /// Skeleton code
+        /// Sort the list, then test if the previous integer is the same as the current one while iterating through sorted list.
         /// </summary>
         /// <returns>
         /// Will return the number of distinct integers.
         /// </returns>
         public int SortedDistinct()
         {
-            return 0;
+            int count = 0;
+            int followingIndex = -1;
+            this.list.Sort();
+            foreach (var item in this.list)
+            {
+                if (followingIndex != item)
+                {
+                    ++count;
+                }
+
+                followingIndex = item;
+            }
+
+            return count;
         }
     }
 }

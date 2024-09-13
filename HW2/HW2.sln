@@ -5,7 +5,12 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Form1", "Form1\Form1.csproj", "{E74B477E-CFCB-4B18-BCC3-BAF9DB682D74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW2Test", "RandomTest\HW2Test.csproj", "{AC9C2FC8-A525-4A78-8BF0-BDAF8D1D5C5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HW2Test", "RandomTest\HW2Test.csproj", "{AC9C2FC8-A525-4A78-8BF0-BDAF8D1D5C5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7F77454A-F371-4517-A78E-A4F369A595D6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
