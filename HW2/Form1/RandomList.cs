@@ -107,5 +107,16 @@ namespace Form1
 
             return count;
         }
+
+        /// <summary>
+        /// Skeleton code
+        /// </summary>
+        /// <returns>
+        /// Will return the number of distinct integers.
+        /// </returns>
+        public int SortedDistinct()
+        {
+            return 0;
+        }
     }
 }
