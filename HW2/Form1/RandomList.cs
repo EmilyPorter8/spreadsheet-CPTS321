@@ -68,26 +68,44 @@ namespace Form1
         /// </returns>
         public int HashSetDistinct()
         {
-            // HashSet<int> result = [.. this.list]; // I have never seen this syntax before, but StyleCop offered this implementation.
-            HashSet<int> result = new HashSet<int>();
-            foreach (int item in this.list)
+            // HashSet<int> result = [.. this.list]; // I have never seen this syntax before, but StyleCop(?) offered this implementation.
+            HashSet<int> result = new HashSet<int>(); // create new hash set.
+            foreach (int item in this.list) // go through list, adding values to hash set.
             {
-                result.Add(item);
+                result.Add(item); // cannot add duplicates to hash set, so it will automatically only get distinct integers.
             }
 
-            return result.Count;
+            return result.Count; // return size of hash set.
         }
 
         /// <summary>
-        /// currently skeleton code.
+        /// Terribly innefficient size wise, but O(1) space. Iterates through the list for every single possible integer, counting the ones that appear.
         /// </summary>
         /// <returns>
-        /// Will return number of distinct integers.
+        /// Returns number of distinct integers.
         /// </returns>
         public int O1StorageDistinct()
         {
+            int index = 0; // for iterating through list
+            int count = 0; // for counting the distinct integers
 
-            return 0;
+            // keep running through the list until all possible distinct values have been found
+            // either all of them are distinct or the possible integer it could be has run out.
+            while (count < 10001 && index < 20001)
+            {
+                foreach (int item in this.list) // iterate through list.
+                {
+                    if (index == item) // once distinct integer has been found, increase count and break the loop. 
+                    {
+                        count++;
+                        break;
+                    }
+                }
+
+                index++; // once we iterated through loop or found distinct number, increase index.
+            }
+
+            return count;
         }
     }
 }

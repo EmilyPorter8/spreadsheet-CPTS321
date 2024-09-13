@@ -31,9 +31,9 @@ namespace Form1
             text += "\nTime complexity for this is linear or O(n), since the" +
                 "total cost of HashSetDistinct() = 1(for the initilization of hash set) + n(iterating through list) + 1(return)+ a couple other integer operations = O(n)";
 
-            // text += "\n2. O(1) storage method: ";
-            // text += randomList.O1StorageDistinct();
-            // text += " unique numbers";
+            text += "\n2. O(1) storage method: ";
+            text += randomList.O1StorageDistinct();
+            text += " unique numbers";
             // text += "\n3. Sorted method: "
             // text += randomList.SortedDistinct();
             // text += " unique methods"
