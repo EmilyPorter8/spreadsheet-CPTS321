@@ -2,6 +2,7 @@
 // 011741612
 namespace Form1
 {
+    using System;
     /// <summary>
     /// Form1 inherits from Form base class.
     /// </summary>
@@ -14,14 +15,29 @@ namespace Form1
         public Form1()
         {
             this.InitializeComponent();
-            RunDistinctIntegers();
+            string text = RunDistinctIntegers();
+            this.textBox1.Text = text;
         }
 
         /// <summary>
         /// Will call all Distinct methods here.
         /// </summary>
-        private static void RunDistinctIntegers()
+        private static string RunDistinctIntegers()
         {
+            string text = "1. Hash set method: ";
+            RandomList randomList = new RandomList();
+            text += randomList.HashSetDistinct();
+            text += " unique numbers\n";
+            text += "\nTime complexity for this is linear or O(n), since the" +
+                "total cost of HashSetDistinct() = 1(for the initilization of hash set) + n(iterating through list) + 1(return)+ a couple other integer operations = O(n)";
+
+            // text += "\n2. O(1) storage method: ";
+            // text += randomList.O1StorageDistinct();
+            // text += " unique numbers";
+            // text += "\n3. Sorted method: "
+            // text += randomList.SortedDistinct();
+            // text += " unique methods"
+            return text;
         }
 
         /// <summary>
@@ -31,10 +47,11 @@ namespace Form1
         /// I am not sure how this works.
         /// </param>
         /// <param name="e">
-        /// when something happens.
+        /// when something happens?.
         /// </param>
         private void Form1_Load(object sender, EventArgs e)
         {
+            //textBox1.Text = "1. H";
         }
     }
 }

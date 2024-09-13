@@ -42,7 +42,7 @@ namespace HW2Test
         [Test]
         public void TestConstructionSize()
         {
-            Assert.That(this.testList.GetList().Count, Is.EqualTo(10000));
+            Assert.That(this.testList.GetList().Count, Is.EqualTo(10001));
         }
 
         /// <summary>

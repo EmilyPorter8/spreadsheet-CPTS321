@@ -65,7 +65,19 @@ namespace Form1
         /// </returns>
         public int HashSetDistinct()
         {
-            // skeleton code
+            // HashSet<int> result = [.. this.list]; // I have never seen this syntax before, but StyleCop offered this implementation.
+            HashSet<int> result = new HashSet<int>();
+            foreach (int item in this.list)
+            {
+                result.Add(item);
+            }
+
+            return result.Count;
+        }
+
+        public int O1StorageDistinct()
+        {
+
             return 0;
         }
     }
