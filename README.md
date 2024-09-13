@@ -3,6 +3,10 @@
 Emily Porter
 11741612
 
+# StyleCop Updates
+ SA 1010: Without changing this, StyleCop would have issue with List = [].
+ SA 1634 to  SA 1636: Don't need copyright at the start of files. 
+
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
