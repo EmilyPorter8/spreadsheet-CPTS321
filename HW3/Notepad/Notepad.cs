@@ -27,7 +27,7 @@ namespace Notepad
         /// </remarks>
         private void LoadText(TextReader sr)
         {
-            // skeleton code
+          this.textBox1.Text = sr.ReadToEnd();
         }
 
         /// <summary>
@@ -47,6 +47,7 @@ namespace Notepad
 
         private void saveToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //code from https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.savefiledialog?redirectedfrom=MSDN&view=windowsdesktop-7.0&viewFallbackFrom=net-7.0
             Stream myStream;
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
