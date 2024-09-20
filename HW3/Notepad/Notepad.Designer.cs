@@ -55,13 +55,19 @@ namespace Notepad
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
+            openFileDialog1.FileOk += openFileDialog1_FileOk;
+            // 
+            // saveFileDialog1
+            // 
+            saveFileDialog1.Filter = "text file|*.txt";
+            saveFileDialog1.FileOk += saveFileDialog1_FileOk;
             // 
             // fileToolStripMenuItem
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadFromFileToolStripMenuItem, loadFibonacciNumbersfirst50ToolStripMenuItem, loadFibonacciNumbersfirst100ToolStripMenuItem, saveToFileToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(53, 24);
-            fileToolStripMenuItem.Text = "File?";
+            fileToolStripMenuItem.Size = new Size(46, 24);
+            fileToolStripMenuItem.Text = "File";
             fileToolStripMenuItem.Click += fileToolStripMenuItem_Click;
             // 
             // loadFromFileToolStripMenuItem

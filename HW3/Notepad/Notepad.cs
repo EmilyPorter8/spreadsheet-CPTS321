@@ -27,7 +27,7 @@ namespace Notepad
         /// </remarks>
         private void LoadText(TextReader sr)
         {
-          this.textBox1.Text = sr.ReadToEnd();
+            this.textBox1.Text = sr.ReadToEnd();
         }
 
         /// <summary>
@@ -45,29 +45,30 @@ namespace Notepad
         }
 
 
+        /// <summary>
+        /// Saves contents of textbox to user selected file.
+        /// </summary>
+        /// <param name="sender">
+        /// Not sure how this works.
+        /// </param>
+        /// <param name="e">
+        /// When user selectes this from menu.
+        /// </param>
         private void saveToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //code from https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.savefiledialog?redirectedfrom=MSDN&view=windowsdesktop-7.0&viewFallbackFrom=net-7.0
-            Stream myStream;
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-
-            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveFileDialog1.FilterIndex = 2;
-            saveFileDialog1.RestoreDirectory = true;
-
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            this.saveFileDialog1.ShowDialog();
+            string path = this.saveFileDialog1.FileName;
+            using (StreamWriter streamWriter = new StreamWriter(path))
             {
-                if ((myStream = saveFileDialog1.OpenFile()) != null)
-                {
-                    // Code to write the stream goes here.
-                    myStream.Close();
-                }
+                streamWriter.Write(this.textBox1.Text);
             }
+
+            // File.WriteAllText(path, this.textBox1.Text);
         }
 
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         private void loadFibonacciNumbersfirst50ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -75,14 +76,35 @@ namespace Notepad
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// This is from menu, used to load text from user selected existing file.
+        /// </summary>
+        /// <param name="sender">
+        /// Not sure what this is.
+        /// </param>
+        /// <param name="e">
+        /// When user clicks on menu option.
+        /// </param>
         private void loadFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            this.openFileDialog1.ShowDialog();
+            using (StreamReader streamReader = new StreamReader(this.openFileDialog1.FileName))
+            {
+                this.LoadText(streamReader);
+            }
         }
 
         private void loadFibonacciNumbersfirst100ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+        }
+
+        private void saveFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
         }
     }
 }
