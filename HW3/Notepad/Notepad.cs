@@ -1,3 +1,7 @@
+// <copyright file="Notepad.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Notepad
 {
     /// <summary>
@@ -44,7 +48,6 @@ namespace Notepad
             // leaving this empty. for now?
         }
 
-
         /// <summary>
         /// Saves contents of textbox to user selected file.
         /// </summary>
@@ -73,7 +76,10 @@ namespace Notepad
 
         private void loadFibonacciNumbersfirst50ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            using (FibonacciTextReader streamReader = new FibonacciTextReader(50))
+            {
+                this.LoadText(streamReader);
+            }
         }
 
         /// <summary>
@@ -96,7 +102,10 @@ namespace Notepad
 
         private void loadFibonacciNumbersfirst100ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            using (FibonacciTextReader streamReader = new FibonacciTextReader(100))
+            {
+                this.LoadText(streamReader);
+            }
         }
 
         private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)

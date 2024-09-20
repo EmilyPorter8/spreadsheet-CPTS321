@@ -1,7 +1,12 @@
-﻿namespace Notepad
+﻿// <copyright file="FibonacciTextReader.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Notepad
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Eventing.Reader;
     using System.Linq;
     using System.Numerics;
     using System.Text;
@@ -14,10 +19,10 @@
     /// </summary>
     public class FibonacciTextReader : TextReader
     {
-        private BigInteger prev;
-        private BigInteger cur;
-        private int maxLines;
-        private int curLine;
+        private BigInteger prev; // previous number that fibonacci generates.
+        private BigInteger cur; // current number that fibonacci generates.
+        private int maxLines; // what number we are going to.
+        private int curLine; // index of current lines iterated through.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FibonacciTextReader"/> class.
@@ -53,26 +58,31 @@
         /// </returns>
         public override string? ReadLine()
         {
-            this.curLine++;
-            if (this.curLine < this.maxLines)
+            this.curLine++; // increase current number of lines index.
+            if (this.curLine <= this.maxLines) // only go to number specified in construction.
             {
-                BigInteger next = this.cur + this.prev;
-                if (this.cur == 0)
+                BigInteger next = this.cur + this.prev; // fibonacci is addition of two previous.
+                if (this.curLine == 1) // this is for first special case.
                 {
-                    this.cur = 1;
+                    next = 0;
+                }
+                else if (this.curLine == 2) // second special case.
+                {
+                    next = 1;
+                    this.cur = 1; // set this to one, to actually begin the algorithm.
                 }
                 else
                 {
-                    this.prev = this.cur;
-                    this.cur = next;
+                    this.prev = this.cur; // prev is not cur.
+                    this.cur = next; // cur is now next.
                 }
 
                 // Console.WriteLine(this.curLine.ToString() + ": " + next.ToString());
-                return this.curLine.ToString() + ": " + next.ToString();
+                return this.curLine.ToString() + ": " + next.ToString(); // to have the formatting that is in example.
             }
             else
             {
-                return null;
+                return null; // we reached the end.
             }
         }
 
@@ -84,7 +94,18 @@
         /// </returns>
         public override string? ReadToEnd()
         {
-            return null;
+            string curFib = "start"; // need to set this to something other than null for while to loop.
+            string? result = null; // used a string instead of stringbuilder.
+            while (curFib != null) // iterate until readline() returns null.
+            {
+                curFib = this.ReadLine(); // set curFib to return value of readline, which should be new fib number.
+                if (curFib != null) // check if return is null.
+                {
+                    result += "\r\n" + curFib; // add current fib to return.
+                }
+            }
+
+            return result; // return the string with concatened fib values in maxLines number.
         }
     }
 }

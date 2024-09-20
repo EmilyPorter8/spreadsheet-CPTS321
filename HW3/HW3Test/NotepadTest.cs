@@ -1,3 +1,7 @@
+// <copyright file="NotepadTest.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace HW3Test
 {
     using System.ComponentModel;
@@ -9,6 +13,9 @@ namespace HW3Test
     [TestFixture]
     public class NotepadTest
     {
+        /// <summary>
+        /// Do not need set up.
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -21,8 +28,8 @@ namespace HW3Test
         public void TestLoadText()
         {
             TextReader testReader = new StringReader("testing if LoadText() will read this");
-            Notepad testNotepad;
 
+            // Notepad testNotepad.
             Assert.Pass();
         }
     }
