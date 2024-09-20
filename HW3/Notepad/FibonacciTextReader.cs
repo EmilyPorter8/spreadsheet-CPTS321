@@ -12,7 +12,7 @@ namespace Notepad
     /// as passed in for maxLines. Through its methods, will
     /// be able to implement it into notepad.
     /// </summary>
-    internal class FibonacciTextReader : TextReader
+    public class FibonacciTextReader : TextReader
     {
         private BigInteger prev;
         private BigInteger cur;
@@ -45,7 +45,8 @@ namespace Notepad
         }
 
         /// <summary>
-        /// 
+        /// Overloaded ReadLine() function. Generates next fibonacci number in sequence
+        /// from the two previous numbers.
         /// </summary>
         /// <returns>
         /// String of current number in Fibonnaci sequence, or null.
