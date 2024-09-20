@@ -81,5 +81,34 @@ namespace HW3Test
             Assert.That(fibonacciTextReader.ReadLine(), Is.EqualTo(null));
         }
 
+        /// <summary>
+        /// Normal test of ReadToEnd().
+        /// </summary>
+        [Test]
+        public void TestNormalReadToEnd()
+        {
+            FibonacciTextReader fibonacciTextReader = new FibonacciTextReader(4);
+            Assert.That(fibonacciTextReader.ReadToEnd(), Is.EqualTo("\r\n1: 0\r\n2: 1\r\n3: 1\r\n4: 2"));
+        }
+
+        /// <summary>
+        /// Boundry test of ReadToEnd().
+        /// </summary>
+        [Test]
+        public void TestBoundryReadToEnd()
+        {
+            FibonacciTextReader fibonacciTextReader = new FibonacciTextReader(-1);
+            Assert.That(fibonacciTextReader.ReadToEnd(), Is.EqualTo(null));
+        }
+
+        /// <summary>
+        /// Exception test of ReadToEnd().
+        /// </summary>
+        [Test]
+        public void TestExceptionReadToEnd()
+        {
+            FibonacciTextReader fibonacciTextReader = new FibonacciTextReader(99999999);
+            Assert.Throws<OutOfMemoryException>(() => fibonacciTextReader.ReadToEnd());
+        }
     }
 }

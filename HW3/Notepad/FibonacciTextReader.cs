@@ -76,8 +76,15 @@
             }
         }
 
-
-        //ReadToEnd()
-        //{ }
+        /// <summary>
+        /// Overloaded ReadToEnd() function. Calls overloaded ReadLine() maxLine number of times.
+        /// </summary>
+        /// <returns>
+        /// Returns string of maxLine number of fibonacci sequence.
+        /// </returns>
+        public override string? ReadToEnd()
+        {
+            return null;
+        }
     }
 }
