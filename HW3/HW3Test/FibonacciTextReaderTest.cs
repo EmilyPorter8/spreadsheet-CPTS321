@@ -58,23 +58,20 @@ namespace HW3Test
         }
 
         /// <summary>
-        /// Normal test of ReadLine() generating string at end.
+        /// Exception test of ReadLine() with bad arguement.
         /// </summary>
         [Test]
-        public void TestExceptionEndReadLine()
+        public void TestExceptionReadLine()
         {
-            FibonacciTextReader fibonacciTextReader = new FibonacciTextReader(3);
-            fibonacciTextReader.ReadLine();
-            fibonacciTextReader.ReadLine();
-            fibonacciTextReader.ReadLine();
-            fibonacciTextReader.ReadLine();
+            FibonacciTextReader fibonacciTextReader = new FibonacciTextReader(-222222);
 
             // throw exception.
+            //Assert.Throws<>(Type );
             Assert.That(fibonacciTextReader.ReadLine(), Is.EqualTo(null));
         }
 
         /// <summary>
-        /// Normal test of ReadLine() generating string between first and end.
+        /// Boundary test of ReadLine() generating string if input is 0.
         /// </summary>
         [Test]
         public void TestBoundryReadLine()

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Notepad
+﻿namespace Notepad
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Numerics;
+    using System.Text;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Inherits from TextReader, generates as many integers
     /// as passed in for maxLines. Through its methods, will
@@ -24,8 +24,8 @@ namespace Notepad
         /// </summary>
         public FibonacciTextReader()
         {
-            this.prev = -1;
-            this.cur = -1;
+            this.prev = 0;
+            this.cur = 0;
             this.maxLines = 0;
             this.curLine = 0;
         }
@@ -40,8 +40,8 @@ namespace Notepad
         {
             this.maxLines = maxLines;
             this.curLine = 0;
-            this.prev = -1;
-            this.cur = -1;
+            this.prev = 0;
+            this.cur = 0;
         }
 
         /// <summary>
@@ -51,8 +51,30 @@ namespace Notepad
         /// <returns>
         /// String of current number in Fibonnaci sequence, or null.
         /// </returns>
-        private string ReadLine()
-        { return " "; }
+        public override string? ReadLine()
+        {
+            this.curLine++;
+            if (this.curLine < this.maxLines)
+            {
+                BigInteger next = this.cur + this.prev;
+                if (this.cur == 0)
+                {
+                    this.cur = 1;
+                }
+                else
+                {
+                    this.prev = this.cur;
+                    this.cur = next;
+                }
+
+                // Console.WriteLine(this.curLine.ToString() + ": " + next.ToString());
+                return this.curLine.ToString() + ": " + next.ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
 
         //ReadToEnd()
