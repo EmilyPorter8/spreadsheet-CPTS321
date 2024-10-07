@@ -25,9 +25,9 @@ namespace Spreadsheet_Emily_Porter
         private void InitilizeSpreadSheet()
         {
             for (char c = 'A'; c <= 'Z'; c++) // iterate through alphabet, adding columns each time
-            { 
+            {
                 string newheader = c.ToString(); // newheader is.
-                this.dataGridView1.Columns.Add(newheader,newheader); // add column with corresponding character to column name.
+                this.dataGridView1.Columns.Add(newheader, newheader); // add column with corresponding character to column name.
             }
 
             for (int i = 0; i < 50; i++) // add 50 rows to the dataGridView1
