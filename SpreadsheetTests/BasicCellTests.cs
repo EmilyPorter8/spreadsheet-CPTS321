@@ -1,16 +1,26 @@
+// <copyright file="BasicCellTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// Emily Porter 011741612
+
 namespace SpreadsheetTests
 {
     using NUnit.Framework;
 
-    public class Tests
+    /// <summary>
+    /// Tests for Internal BasicCell. Mostly just testing methods from abstract Cell.
+    /// </summary>
+    public class BasicCellTests
     {
         private SpreadsheetEngine.BasicCell test;
 
+        /// <summary>
+        /// Constructing/initilizing a BasicCell to use for tests.
+        /// </summary>
         [SetUp]
         public void Setup()
         {
            this.test = new SpreadsheetEngine.BasicCell(8, 3);
-
         }
 
         /// <summary>
@@ -21,7 +31,6 @@ namespace SpreadsheetTests
         {
             Assert.IsNotNull(this.test);
         }
-
 
         /// <summary>
         /// Testing RowIndex getter, if it returns correct value.

@@ -1,3 +1,8 @@
+// <copyright file="Form1.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// Emily Porter 011741612
+
 namespace Spreadsheet_Emily_Porter
 {
     /// <summary>

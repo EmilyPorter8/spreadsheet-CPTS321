@@ -20,8 +20,8 @@ namespace SpreadsheetEngine
     {
         private readonly int rowindex;
         private readonly int columnindex;
-        private string text; // what we show to user.
-        private string value; // what cell actually contains.
+        protected string text; // what we show to user.
+        protected string value; // what cell actually contains.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
@@ -55,46 +55,30 @@ namespace SpreadsheetEngine
         public int ColumnIndex { get => this.columnindex; } // column index for where cell is located.
 
         /// <summary>
-        /// Gets or sets the value attribute.
+        /// Gets the value attribute. Set can now be defined as internal in the BaseCell class.
         /// </summary>
-        protected string Value
+        public string Value { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the text attribute.
+        /// </summary>
+        public string Text
         {
-            get => this.value;
+            get => this.text;
+
             set
             {
-                if (this.value == value)
+                if (this.text == value)
                 {
                     // ignore it.
                 }
                 else
                 {
                     // text is actually being changed.
-                    this.value = value;
-
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
+                    this.text = value;
+                    this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the text attribute.
-        /// </summary>
-        protected string Text
-        {
-            get => this.text;
-            // set
-            // {
-            //    if (this.text == value)
-            //    {
-            //        // ignore it.
-            //    }
-            //    else
-            //    {
-            //        // text is actually being changed.
-            //        this.text = value;
-            //        this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
-            //    }
-            // }
         }
     }
 }

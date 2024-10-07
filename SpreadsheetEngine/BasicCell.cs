@@ -1,4 +1,9 @@
-﻿using System;
+﻿// <copyright file="BasicCell.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+// Emily Porter 011741612
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -14,11 +19,19 @@ namespace SpreadsheetEngine
     /// </summary>
     internal class BasicCell : Cell
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BasicCell"/> class.
+        /// Constructor for Basic Cell.
+        /// </summary>
+        /// <param name="newRowIndex">
+        /// Row index passed in from spreadsheet.
+        /// </param>
+        /// <param name="newColumnIndex">
+        /// Column index passed in from spreadsheet.
+        /// </param>
         public BasicCell(int newRowIndex, int newColumnIndex)
             : base(newRowIndex, newColumnIndex)
         {
         }
-
-
     }
 }
