@@ -5,6 +5,10 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spreadsheet_Emily_Porter", "Spreadsheet_Emily_Porter.csproj", "{D3E74B1E-BCFF-4FF5-83DE-0867FA4D18BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetEngine", "..\SpreadsheetEngine\SpreadsheetEngine.csproj", "{73085722-7AF6-486B-AFFA-B5130EBB7433}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetTests", "..\SpreadsheetTests\SpreadsheetTests.csproj", "{2FA499AF-48E6-4A64-A9C6-8944D172B009}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{D3E74B1E-BCFF-4FF5-83DE-0867FA4D18BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3E74B1E-BCFF-4FF5-83DE-0867FA4D18BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3E74B1E-BCFF-4FF5-83DE-0867FA4D18BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73085722-7AF6-486B-AFFA-B5130EBB7433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73085722-7AF6-486B-AFFA-B5130EBB7433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73085722-7AF6-486B-AFFA-B5130EBB7433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73085722-7AF6-486B-AFFA-B5130EBB7433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA499AF-48E6-4A64-A9C6-8944D172B009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA499AF-48E6-4A64-A9C6-8944D172B009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA499AF-48E6-4A64-A9C6-8944D172B009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA499AF-48E6-4A64-A9C6-8944D172B009}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
