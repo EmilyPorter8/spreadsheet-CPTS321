@@ -8,6 +8,7 @@ namespace SpreadsheetTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -40,7 +41,7 @@ namespace SpreadsheetTests
         [Test]
         public void NormalConstructorTest()
         {
-            Assert.IsNotNull(this.testNormal);
+            Assert.IsNotNull(this.testNormal.GetSpreadsheet());
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace SpreadsheetTests
         [Test]
         public void BoundaryConstructorTest()
         {
-            Assert.IsNull(this.testBoundary);
+            Assert.IsNull(this.testBoundary.GetSpreadsheet());
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace SpreadsheetTests
         [Test]
         public void ExceptionalConstructorTest()
         {
-            Assert.IsNull(this.testExceptional);
+            Assert.IsNull(this.testExceptional.GetSpreadsheet());
         }
 
         /// <summary>
@@ -119,7 +120,7 @@ namespace SpreadsheetTests
         [Test]
         public void NormalGetColumnCount()
         {
-            Assert.That(this.testNormal.ColumnCount, Is.EqualTo(5));
+            Assert.That(this.testNormal.ColumnCount, Is.EqualTo(3));
         }
 
         /// <summary>
@@ -128,7 +129,7 @@ namespace SpreadsheetTests
         [Test]
         public void ExceptionalGetRowCount()
         {
-            Assert.That(this.testExceptional.RowCount, Is.EqualTo(5));
+            Assert.That(this.testExceptional.RowCount, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace SpreadsheetTests
         [Test]
         public void ExceptionalGetColumnCount()
         {
-            Assert.That(this.testExceptional.ColumnCount, Is.EqualTo(5));
+            Assert.That(this.testExceptional.ColumnCount, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace SpreadsheetTests
         [Test]
         public void BoundaryGetRowCount()
         {
-            Assert.That(this.testBoundary.RowCount, Is.EqualTo(5));
+            Assert.That(this.testBoundary.RowCount, Is.EqualTo(0));
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace SpreadsheetTests
         [Test]
         public void BoundaryGetColumnCount()
         {
-            Assert.That(this.testBoundary.ColumnCount, Is.EqualTo(5));
+            Assert.That(this.testBoundary.ColumnCount, Is.EqualTo(0));
         }
     }
 }

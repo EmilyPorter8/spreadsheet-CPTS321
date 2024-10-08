@@ -2,6 +2,9 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 // Emily Porter 011741612
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("SpreadsheetTests")]
 
 namespace SpreadsheetEngine
 {
@@ -17,23 +20,10 @@ namespace SpreadsheetEngine
     /// </summary>
     public class Spreadsheet
     {
-        private BasicCell[][] spreadsheet;
+        // private BasicCell[][] spreadsheet;
+        private Cell[,] spreadsheet;
         private int rowCount;
         private int columnCount;
-
-        /// <summary>
-        /// Gets rowCount.
-        /// </summary>
-        public int RowCount
-        {
-            get => this.rowCount;
-        }
-
-        /// <summary>
-        /// Gets column count. Property that will return columnCount data member.
-        /// </summary>
-        public int ColumnCount
-        { get => this.columnCount; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Spreadsheet"/> class.
@@ -49,19 +39,43 @@ namespace SpreadsheetEngine
         {
             this.rowCount = rowSize;
             this.columnCount = columnSize;
-            if (rowSize > 0 && columnSize > 0)
+            this.InitializeSpreadsheet();
+        }
+
+        /// <summary>
+        /// Gets rowCount.
+        /// </summary>
+        public int RowCount
+        {
+            get => this.rowCount;
+        }
+
+        /// <summary>
+        /// Gets column count. Property that will return columnCount data member.
+        /// </summary>
+        public int ColumnCount
+        { get => this.columnCount; }
+
+        private void InitializeSpreadsheet()
+        {
+            if (this.rowCount > 0 && this.columnCount > 0)
             {
-                for (int rowIndex = 0; rowIndex < rowSize; rowIndex++)
+                this.spreadsheet = new BasicCell[this.rowCount, this.columnCount];
+
+                for (int rowIndex = 0; rowIndex < this.rowCount; rowIndex++)
                 {
-                    for (int columnIndex = 0; columnIndex < columnSize; columnIndex++)
+                    for (int columnIndex = 0; columnIndex < this.columnCount; columnIndex++)
                     {
-                        this.spreadsheet[rowIndex][columnIndex] = new BasicCell(rowIndex, columnIndex); // rowIndex and columnIndex will start at 0, while rowSize and columnSize will start at 1.
+                        // rowIndex and columnIndex will start at 0, while rowSize and columnSize will start at 1.
+                        this.spreadsheet[rowIndex, columnIndex] = new BasicCell(rowIndex, columnIndex);
                     }
                 }
             }
             else
             {
                 this.spreadsheet = null;
+                this.rowCount = 0;
+                this.columnCount = 0;
             }
         }
 
@@ -84,8 +98,26 @@ namespace SpreadsheetEngine
         /// </returns>
         public Cell GetCell(int rowIndex, int columnIndex)
         {
-            Cell cell = new BasicCell(rowIndex, columnIndex);
-            return cell;
+            if (rowIndex < this.rowCount && columnIndex < this.columnCount && rowIndex >= 0 && columnIndex >= 0)
+            {
+                Cell cell = new BasicCell(rowIndex, columnIndex);
+                return cell;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets spreadsheet.
+        /// </summary>
+        /// <returns>
+        /// Method that will return spreadsheet data member.
+        /// </returns>
+        public Cell[,] GetSpreadsheet()
+        {
+            return this.spreadsheet;
         }
     }
 }
