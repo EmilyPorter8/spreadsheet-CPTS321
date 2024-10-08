@@ -16,7 +16,7 @@ namespace SpreadsheetEngine
     /// <summary>
     /// HW4 Part 4.
     /// </summary>
-    public abstract class Cell
+    public abstract class Cell : INotifyPropertyChanged
     {
         private readonly int rowindex;
         private readonly int columnindex;
@@ -37,10 +37,12 @@ namespace SpreadsheetEngine
         {
             this.rowindex = newRowIndex;
             this.columnindex = newColumnIndex;
+            this.text = string.Empty;
+            this.value = string.Empty;
         }
 
         /// <summary>
-        /// This is the list of subsribers that will be notified when text is changed.
+        /// This is the list of subsribers that will be notified when text/value is changed.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
@@ -57,7 +59,24 @@ namespace SpreadsheetEngine
         /// <summary>
         /// Gets the value attribute. Set can now be defined as internal in the BaseCell class.
         /// </summary>
-        public string Value { get; internal set; }
+        public string Value
+        {
+            get => this.text;
+            internal set
+            {
+                if (this.value == value)
+                {
+                    // ignore it.
+                }
+                else
+                {
+                    // text is actually being changed.
+                    this.value = value;
+                    this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
+                }
+            }
+        }
+
 
         /// <summary>
         /// Gets or sets the text attribute.

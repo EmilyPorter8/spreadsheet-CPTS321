@@ -17,7 +17,7 @@ namespace SpreadsheetEngine
     /// <summary>
     /// Inherits from Cell class, but can actually be instantiated. Should include setter for Value.
     /// </summary>
-    internal class BasicCell : Cell
+    public class BasicCell : Cell
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicCell"/> class.
