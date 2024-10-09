@@ -61,7 +61,7 @@ namespace SpreadsheetEngine
         /// </summary>
         public string Value
         {
-            get => this.text;
+            get => this.value;
             internal set
             {
                 if (this.value == value)
@@ -72,6 +72,7 @@ namespace SpreadsheetEngine
                 {
                     // text is actually being changed.
                     this.value = value;
+
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
                 }
             }

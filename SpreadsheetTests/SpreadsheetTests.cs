@@ -9,6 +9,7 @@ namespace SpreadsheetTests
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -157,6 +158,40 @@ namespace SpreadsheetTests
         public void BoundaryGetColumnCount()
         {
             Assert.That(this.testBoundary.ColumnCount, Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// Normal testing if value of Evaluation() correctly updates cell value.
+        /// </summary>
+        [Test]
+        public void NormalEvaluation()
+        {
+            this.testNormal.GetSpreadsheet()[1, 2].Value = 5.ToString();
+            this.testNormal.GetSpreadsheet()[1, 1].Text = "=B3";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("5"));
+        }
+
+        /// <summary>
+        /// Boundary testing if value of Evaluation() correctly updates cell value to error if index is outside of bounds.
+        /// </summary>
+        [Test]
+        public void BoundaryEvaluation()
+        {
+            this.testNormal.GetSpreadsheet()[1, 1].Text = "=Z3";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!ERROR!"));
+        }
+
+        /// <summary>
+        /// Exceptional testing if value of Evaluation() correctly updates cell value to error if incorrect input.
+        /// </summary>
+        [Test]
+        public void ExceptionalEvaluation()
+        {
+            this.testNormal.GetSpreadsheet()[1, 1].Text = "=potato";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!ERROR!"));
         }
     }
 }

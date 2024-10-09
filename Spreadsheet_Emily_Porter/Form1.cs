@@ -38,7 +38,7 @@ namespace Spreadsheet_Emily_Porter
             for (int i = 0; i < 50; i++) // add 50 rows to the dataGridView1
             {
                 this.dataGridView1.Rows.Add(); // add new row to datagridview.
-                this.dataGridView1.Rows[i].HeaderCell.Value = i.ToString(); // name row that we just added.
+                this.dataGridView1.Rows[i].HeaderCell.Value = (i + 1).ToString(); // name row that we just added.
             }
         }
     }

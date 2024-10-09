@@ -11,6 +11,7 @@ namespace SpreadsheetEngine
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -43,6 +44,11 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// This is the list of subscribers that will be notified when cell is changed.
+        /// </summary>
+        public event PropertyChangedEventHandler CellPropertyChanged = delegate { };
+
+        /// <summary>
         /// Gets rowCount.
         /// </summary>
         public int RowCount
@@ -56,36 +62,8 @@ namespace SpreadsheetEngine
         public int ColumnCount
         { get => this.columnCount; }
 
-        private void InitializeSpreadsheet()
-        {
-            if (this.rowCount > 0 && this.columnCount > 0)
-            {
-                this.spreadsheet = new BasicCell[this.rowCount, this.columnCount];
-
-                for (int rowIndex = 0; rowIndex < this.rowCount; rowIndex++)
-                {
-                    for (int columnIndex = 0; columnIndex < this.columnCount; columnIndex++)
-                    {
-                        // rowIndex and columnIndex will start at 0, while rowSize and columnSize will start at 1.
-                        this.spreadsheet[rowIndex, columnIndex] = new BasicCell(rowIndex, columnIndex);
-                    }
-                }
-            }
-            else
-            {
-                this.spreadsheet = null;
-                this.rowCount = 0;
-                this.columnCount = 0;
-            }
-        }
-
         /// <summary>
-        /// This is the list of subsribers that will be notified when cell is changed.
-        /// </summary>
-        public event PropertyChangedEventHandler CellPropertyChanged = delegate { };
-
-        /// <summary>
-        /// Skeleton code for GetCell().
+        /// Returns refrence to cell given at rowindex and column index. If the cell is out of spreadsheet bounds, returns null.
         /// </summary>
         /// <param name="rowIndex">
         /// rowIndex is the row that cell we are returning is located.
@@ -100,7 +78,8 @@ namespace SpreadsheetEngine
         {
             if (rowIndex < this.rowCount && columnIndex < this.columnCount && rowIndex >= 0 && columnIndex >= 0)
             {
-                Cell cell = new BasicCell(rowIndex, columnIndex);
+                // Cell cell = new BasicCell(rowIndex, columnIndex);
+                Cell cell = this.spreadsheet[rowIndex, columnIndex];
                 return cell;
             }
             else
@@ -110,14 +89,87 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// takes current cell, cehcks if the cell text is the right size. Then, convert user
+        /// input to correct interger indexes, if it is =(letter)(int) format. From there,
+        /// take value from named cell and set it to current cell.
+        /// </summary>
+        /// <param name="curCell">
+        /// cell that has text to be evaluated, to have new value.
+        /// </param>
+        internal void Evaluate(Cell curCell)
+        {
+            // will add future implementation of operators here.
+            if (curCell.Text.Length == 3)
+            {
+                // only the initilization to cell ID
+                int rowIndex = curCell.Text[1] - 'A'; // to convert A to 0.
+                int columnIndex = curCell.Text[2] - '0' - 1; // convert user input of example 3 to 2.
+                if (this.GetCell(rowIndex, columnIndex) != null)
+                {
+                    curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
+                }
+                else
+                {
+                    curCell.Value = "!ERROR!";
+                }
+            }
+            else
+            {
+                // call future implementations of evaluate if too long?
+                curCell.Value = "!ERROR!";
+            }
+        }
+
+        /// <summary>
         /// Gets spreadsheet.
         /// </summary>
         /// <returns>
         /// Method that will return spreadsheet data member.
         /// </returns>
-        public Cell[,] GetSpreadsheet()
+        internal Cell[,] GetSpreadsheet()
         {
             return this.spreadsheet;
+        }
+
+        private void InitializeSpreadsheet()
+        {
+            if (this.rowCount > 0 && this.columnCount > 0)
+            {
+                this.spreadsheet = new BasicCell[this.rowCount, this.columnCount];
+
+                for (int rowIndex = 0; rowIndex < this.rowCount; rowIndex++)
+                {
+                    for (int columnIndex = 0; columnIndex < this.columnCount; columnIndex++)
+                    {
+                        // rowIndex and columnIndex will start at 0, while rowSize and columnSize will start at 1.
+                        this.spreadsheet[rowIndex, columnIndex] = new BasicCell(rowIndex, columnIndex);
+                        this.CellPropertyChanged += this.SpreadsheetPropertyChanged;
+                    }
+                }
+            }
+            else
+            {
+                this.spreadsheet = null;
+                this.rowCount = 0;
+                this.columnCount = 0;
+            }
+        }
+
+        private void SpreadsheetPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Cell curCell = sender as BasicCell;
+
+            // this.UpdateValue(curCell);
+            if (curCell.Text[0] == '=')
+            {
+                this.Evaluate(curCell);
+            }
+            else
+            {
+                curCell.Value = curCell.Text;
+            }
+
+            // this.CellPropertyChanged.Invoke(curCell, e);
         }
     }
 }
