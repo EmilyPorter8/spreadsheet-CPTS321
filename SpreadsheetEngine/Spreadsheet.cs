@@ -46,7 +46,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// This is the list of subscribers that will be notified when cell is changed.
         /// </summary>
-        public event PropertyChangedEventHandler CellPropertyChanged = delegate { };
+        public event PropertyChangedEventHandler CellPropertyChanged = (sender, e) => { };
 
         /// <summary>
         /// Gets rowCount.
@@ -76,15 +76,14 @@ namespace SpreadsheetEngine
         /// </returns>
         public Cell GetCell(int rowIndex, int columnIndex)
         {
-            if (rowIndex < this.rowCount && columnIndex < this.columnCount && rowIndex >= 0 && columnIndex >= 0)
+            if (rowIndex < this.rowCount && columnIndex < this.columnCount && rowIndex >= 0 && columnIndex >= 0) // make sure cell is in spreadsheet range.
             {
-                // Cell cell = new BasicCell(rowIndex, columnIndex);
                 Cell cell = this.spreadsheet[rowIndex, columnIndex];
-                return cell;
+                return cell; // returning refrence to cell.
             }
             else
             {
-                return null;
+                return null; // cell is outside of range.
             }
         }
 
@@ -102,26 +101,26 @@ namespace SpreadsheetEngine
             if (curCell.Text.Length == 3)
             {
                 // only the initilization to cell ID
-                int rowIndex = curCell.Text[1] - 'A'; // to convert A to 0.
-                int columnIndex = curCell.Text[2] - '0' - 1; // convert user input of example 3 to 2.
+                int columnIndex = curCell.Text[1] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
+                int rowIndex = curCell.Text[2] - '0' - 1; // convert user input of example 3 to 2.
                 if (this.GetCell(rowIndex, columnIndex) != null)
                 {
                     curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
                 }
                 else
                 {
-                    curCell.Value = "!ERROR!";
+                    curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
                 }
             }
             else
             {
                 // call future implementations of evaluate if too long?
-                curCell.Value = "!ERROR!";
+                curCell.Value = "!ERROR!"; // incorrect size of input after =.
             }
         }
 
         /// <summary>
-        /// Gets spreadsheet.
+        /// Gets spreadsheet. Used during testing.
         /// </summary>
         /// <returns>
         /// Method that will return spreadsheet data member.
@@ -131,11 +130,14 @@ namespace SpreadsheetEngine
             return this.spreadsheet;
         }
 
+        /// <summary>
+        /// Initialise the spreadsheet for given row and column size. Also subscribe spreadsheet to each cell.
+        /// </summary>
         private void InitializeSpreadsheet()
         {
-            if (this.rowCount > 0 && this.columnCount > 0)
+            if (this.rowCount > 0 && this.columnCount > 0) // valid input?
             {
-                this.spreadsheet = new BasicCell[this.rowCount, this.columnCount];
+                this.spreadsheet = new BasicCell[this.rowCount, this.columnCount]; // iniitilize size of spreadsheet.
 
                 for (int rowIndex = 0; rowIndex < this.rowCount; rowIndex++)
                 {
@@ -143,11 +145,11 @@ namespace SpreadsheetEngine
                     {
                         // rowIndex and columnIndex will start at 0, while rowSize and columnSize will start at 1.
                         this.spreadsheet[rowIndex, columnIndex] = new BasicCell(rowIndex, columnIndex);
-                        this.CellPropertyChanged += this.SpreadsheetPropertyChanged;
+                        this.spreadsheet[rowIndex, columnIndex].PropertyChanged += this.SpreadsheetPropertyChanged; // subscribe spreadsheet to cell's properties.
                     }
                 }
             }
-            else
+            else // if user passes in invalid row or column counts
             {
                 this.spreadsheet = null;
                 this.rowCount = 0;
@@ -155,21 +157,29 @@ namespace SpreadsheetEngine
             }
         }
 
+        /// <summary>
+        /// Reacts to raised notification from cell class. It will raise its own notificaiton to its subscribers in the UI.
+        /// </summary>
+        /// <param name="sender">
+        /// cell that was changed.
+        /// </param>
+        /// <param name="e">
+        /// property that was changed.
+        /// </param>
         private void SpreadsheetPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Cell curCell = sender as BasicCell;
+            Cell curCell = sender as Cell; // caste sender as a cell.
 
-            // this.UpdateValue(curCell);
-            if (curCell.Text[0] == '=')
+            if (curCell.Text[0] == '=') // check if text needs to be evaluated.
             {
-                this.Evaluate(curCell);
+                this.Evaluate(curCell); // if text needs to be evaluated, call function.
             }
             else
             {
-                curCell.Value = curCell.Text;
+                curCell.Value = curCell.Text; // text isnt function, so just set value as cell content.
             }
 
-            // this.CellPropertyChanged.Invoke(curCell, e);
+            this.CellPropertyChanged?.Invoke(curCell, e); // raise notificaiton to subscribers that spreadsheet changed.
         }
     }
 }

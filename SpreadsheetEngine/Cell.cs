@@ -44,7 +44,7 @@ namespace SpreadsheetEngine
         /// <summary>
         /// This is the list of subsribers that will be notified when text/value is changed.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
 
         /// <summary>
         /// Gets the readonly rowindex. Initilize property.
@@ -72,7 +72,6 @@ namespace SpreadsheetEngine
                 {
                     // text is actually being changed.
                     this.value = value;
-
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
                 }
             }
@@ -95,9 +94,21 @@ namespace SpreadsheetEngine
                 {
                     // text is actually being changed.
                     this.text = value;
+                    Console.WriteLine($"Text property changed to: {value}");
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
                 }
             }
+        }
+
+        /// <summary>
+        /// Raises propertychanged event, so that subscribers can react to change.
+        /// </summary>
+        /// <param name="propertyName">
+        /// Value or Text property depending on which has been changed.
+        /// </param>
+        protected void OnPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -43,7 +43,10 @@
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.Size = new Size(800, 450);
             dataGridView1.TabIndex = 0;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
+
+            //dataGridView1.CellContentClick += DataGridView1_CellContentClick;
+
             // 
             // Form1
             // 
@@ -53,6 +56,7 @@
             Controls.Add(dataGridView1);
             Name = "Form1";
             Text = "Spreadsheet";
+            //Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
