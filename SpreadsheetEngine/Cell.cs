@@ -20,8 +20,8 @@ namespace SpreadsheetEngine
     {
         private readonly int rowindex;
         private readonly int columnindex;
-        protected string text; // what we show to user.
-        protected string value; // what cell actually contains.
+        private string text; // what we show to user.
+        private string value; // what cell actually contains.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
@@ -77,7 +77,6 @@ namespace SpreadsheetEngine
                 }
             }
         }
-
 
         /// <summary>
         /// Gets or sets the text attribute.
