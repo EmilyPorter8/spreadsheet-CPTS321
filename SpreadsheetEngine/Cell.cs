@@ -94,7 +94,6 @@ namespace SpreadsheetEngine
                 {
                     // text is actually being changed.
                     this.text = value;
-                    Console.WriteLine($"Text property changed to: {value}");
                     this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
                 }
             }

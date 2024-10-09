@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             dataGridView1 = new DataGridView();
+            hw4demo = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -44,19 +45,27 @@
             dataGridView1.Size = new Size(800, 450);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
-
-            //dataGridView1.CellContentClick += DataGridView1_CellContentClick;
-
+            // 
+            // hw4demo
+            // 
+            hw4demo.Dock = DockStyle.Bottom;
+            hw4demo.Location = new Point(0, 421);
+            hw4demo.Name = "hw4demo";
+            hw4demo.Size = new Size(800, 29);
+            hw4demo.TabIndex = 1;
+            hw4demo.Text = "HW4 Demo";
+            hw4demo.UseVisualStyleBackColor = true;
+            hw4demo.Click += Hw4demo_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(hw4demo);
             Controls.Add(dataGridView1);
             Name = "Form1";
             Text = "Spreadsheet";
-            //Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
@@ -64,5 +73,6 @@
         #endregion
 
         private DataGridView dataGridView1;
+        private Button hw4demo;
     }
 }

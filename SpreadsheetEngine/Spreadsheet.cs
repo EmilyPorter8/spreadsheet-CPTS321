@@ -98,23 +98,30 @@ namespace SpreadsheetEngine
         internal void Evaluate(Cell curCell)
         {
             // will add future implementation of operators here.
-            if (curCell.Text.Length == 3)
+            if (curCell.Text.Length >= 3 && curCell.Text[0] == '=')
             {
                 // only the initilization to cell ID
                 int columnIndex = curCell.Text[1] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
-                int rowIndex = curCell.Text[2] - '0' - 1; // convert user input of example 3 to 2.
-                if (this.GetCell(rowIndex, columnIndex) != null)
+                string rowIndexString = curCell.Text.Substring(2);
+                if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
                 {
-                    curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
+                    if (this.GetCell(rowIndex, columnIndex) != null)
+                    {
+                        curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
+                    }
+                    else
+                    {
+                        curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                    }
                 }
                 else
                 {
-                    curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                    curCell.Value = "!ERROR!"; // row index doesnt fit format, so error.
                 }
             }
             else
             {
-                // call future implementations of evaluate if too long?
+                // call future implementations of evaluate if too small?
                 curCell.Value = "!ERROR!"; // incorrect size of input after =.
             }
         }

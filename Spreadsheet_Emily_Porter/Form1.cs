@@ -24,7 +24,7 @@ namespace Spreadsheet_Emily_Porter
         {
             this.InitializeComponent();
             this.InitilizeDataGridView();
-            this.spreadsheetHW4 = new SpreadsheetEngine.Spreadsheet(26, 50); // initilize spreadsheet to correct size for hw4.
+            this.spreadsheetHW4 = new SpreadsheetEngine.Spreadsheet(50, 26); // initilize spreadsheet to correct size for hw4.
             this.spreadsheetHW4.CellPropertyChanged += this.SpreadsheetPropertyChanged; // subscribe UI spreadsheet to spreadsheet.
         }
 
@@ -51,7 +51,6 @@ namespace Spreadsheet_Emily_Porter
                 cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value; // update text in spreadsheet cell.
             }
         }
-
 
         /// <summary>
         /// Used CellEndEdit becuase once finsihed editing datagridview cell, then update the actual spreadsheet cell.
@@ -86,6 +85,34 @@ namespace Spreadsheet_Emily_Porter
             {
                 this.dataGridView1.Rows.Add(); // add new row to datagridview.
                 this.dataGridView1.Rows[i].HeaderCell.Value = (i + 1).ToString(); // name row that we just added.
+            }
+        }
+
+        private void Hw4demo_Click(object sender, EventArgs e)
+        {
+            // random text.
+            var rand = new Random();
+            for (int i = 0; i < 50; i++)
+            {
+                int rowIndex = rand.Next(50);
+                int columnIndex = rand.Next(26);
+                Cell cell = this.spreadsheetHW4.GetCell(rowIndex, columnIndex);
+                cell.Text = "potato";
+            }
+
+            // implement the B column text.
+            for (int i = 0; i < 50; i++)
+            {
+                Cell cell = this.spreadsheetHW4.GetCell(i, 1);
+                cell.Text = "This is cell B" + (i + 1);
+            }
+
+            // implement the A colomn text.
+            for (int i = 0; i < 50; i++)
+            {
+                string ha = "=B" + i;
+                Cell cell = this.spreadsheetHW4.GetCell(i, 0);
+                cell.Text = ha;
             }
         }
     }
