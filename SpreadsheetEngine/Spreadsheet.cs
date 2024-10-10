@@ -189,4 +189,4 @@ namespace SpreadsheetEngine
             this.CellPropertyChanged?.Invoke(curCell, e); // raise notificaiton to subscribers that spreadsheet changed.
         }
     }
-}
+} 
