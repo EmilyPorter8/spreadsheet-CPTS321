@@ -11,7 +11,11 @@ namespace SpreadsheetEngine
     using System.Text;
     using System.Threading.Tasks;
 
-    internal class ExpressionTree
+    /// <summary>
+    /// Class with entire expression tree.
+    /// For HW5, this just supports one operator at a time.
+    /// </summary>
+    public class ExpressionTree
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
