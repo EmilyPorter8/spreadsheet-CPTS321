@@ -25,10 +25,32 @@ namespace SpreadsheetEngine
         /// <param name="value">
         /// the variable name.
         /// </param>
-        public VariableNode(object value)
+        public VariableNode(string value)
             : base(value)
         {
             this.value = value.ToString();
+        }
+
+        /// <summary>
+        /// Overrrides Node evaluate function. This checks to see if this.value variable is present in the dictionary.
+        /// If so, it will return corresponding value. Else it will just return 0.
+        /// </summary>
+        /// <param name="variables">
+        /// user inputted variables.
+        /// </param>
+        /// <returns>
+        /// Returns corresponding value if key is present in dictionary, else returns 0.
+        /// </returns>
+        public override double Evaluate(Dictionary<string, double> variables)
+        {
+            if (variables.TryGetValue(this.value, out double result)) // try and get value from dictionary.
+            {
+                return result; // key is present, so return corresponding value.
+            }
+            else
+            {
+                return 0; // key isnt present, return 0.
+            }
         }
     }
 }

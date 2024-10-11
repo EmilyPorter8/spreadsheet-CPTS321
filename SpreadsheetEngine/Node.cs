@@ -16,7 +16,7 @@ namespace SpreadsheetEngine
     /// </summary>
     public abstract class Node
     {
-        private object value;
+        private string value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
@@ -24,9 +24,25 @@ namespace SpreadsheetEngine
         /// <param name="value">
         /// The value of the node we are constructing. For example, for operator node, value could be  '+'.
         /// </param>
-        public Node(object value)
+        public Node(string value)
         {
             this.value = value;
         }
+
+        /// <summary>
+        /// Gets value, property Value that can get value.
+        /// </summary>
+        public object Value { get => this.value; }
+
+        /// <summary>
+        /// This is the evaluate that should be overwritten by child Node classes.
+        /// </summary>
+        /// <param name="variables">
+        /// user set variables.
+        /// </param>
+        /// <returns>
+        /// should return corresponding value.
+        /// </returns>
+        public abstract double Evaluate(Dictionary<string, double> variables);
     }
 }

@@ -25,10 +25,24 @@ namespace SpreadsheetEngine
         /// <param name="value">
         /// the operator.
         /// </param>
-        public ConstantNode(object value)
+        public ConstantNode(string value)
             : base(value)
         {
-            this.value = (double)value;
+            this.value = double.Parse(value);
+        }
+
+        /// <summary>
+        /// Overrridden evaluate function, just returns the value of node.
+        /// </summary>
+        /// <param name="variables">
+        /// User inputted variables.
+        /// </param>
+        /// <returns>
+        /// just returns the value of the node.
+        /// </returns>
+        public override double Evaluate(Dictionary<string, double> variables)
+        {
+            return this.value;
         }
     }
 }
