@@ -26,10 +26,13 @@ namespace ExpressionTreeConsoleApp
         {
             int response = 0;
             string expression = string.Empty;
-            string value = string.Empty;
-            string name= string.Empty;
+            string valueInput = string.Empty;
+            double value = 0.0;
+            string name = string.Empty;
             double result = 0.0;
-            while (response != 4)
+            SpreadsheetEngine.ExpressionTree tree = null;
+
+            while (response != 4) // go through loop until user gives 4.
             {
                 Console.WriteLine("\nMenu (current expression: " + expression + ")");
                 Console.WriteLine("\n\t 1 = Enter a new expression");
@@ -42,15 +45,19 @@ namespace ExpressionTreeConsoleApp
                     case 1:
                         Console.WriteLine("Enter Expression: ");
                         expression = Console.ReadLine();
+                        tree = new SpreadsheetEngine.ExpressionTree(expression);
                         break;
                     case 2:
                         Console.WriteLine("Enter variable name: ");
                         name = Console.ReadLine();
                         Console.WriteLine("Enter variable value: ");
-                        value = Console.ReadLine();
+                        valueInput = Console.ReadLine();
+                        value = double.Parse(valueInput);
+                        tree.SetVariable(name, value);
                         break;
                     case 3:
                         Console.WriteLine("Expression evaluated to: ");
+                        result = tree.Evaluate();
                         Console.WriteLine(result);
                         break;
                     case 4:
