@@ -42,8 +42,6 @@ namespace ExpressionTreeConsoleApp
                 if (int.TryParse(Console.ReadLine(), out response))
                 {
                     // try to switch above line to tryparse instead, that way we can have some kidn of exception handeling.
-
-
                     switch (response)
                     {
                         case 1:
