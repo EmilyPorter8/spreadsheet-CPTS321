@@ -20,6 +20,7 @@ namespace SpreadsheetEngine
     {
         private Node left;
         private Node right;
+        private int precedence; // should be inherited and assigned in child class.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OperatorNode"/> class.
@@ -28,9 +29,10 @@ namespace SpreadsheetEngine
         /// <param name="value">
         /// the operator.
         /// </param>
-        public OperatorNode(string value)
+        public OperatorNode(string value, int precedence)
             : base(value)
         {
+            this.precedence = precedence;
             this.left = null;
             this.right = null;
         }
@@ -62,5 +64,11 @@ namespace SpreadsheetEngine
             get => this.right;
             set => this.right = value;
         }
+
+        /// <summary>
+        /// Gets precedence data member.
+        /// </summary>
+        public int Precedence
+        { get => this.precedence; }
     }
 }

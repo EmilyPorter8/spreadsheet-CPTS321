@@ -34,6 +34,8 @@ namespace SpreadsheetEngine
             Node curNode = null;
             OperatorNodeFactory operatorNodeFactory = new OperatorNodeFactory();
             OperandNodeFactory operandNodeFactory = new OperandNodeFactory();
+            List<Node> output = new List<Node>(); // postfix expression of nodes.
+            Stack<OperatorNode> operatorNodes = new Stack<OperatorNode>(); // shunting yard operator stack.
 
             // iterate through each character in expression.
             for (int index = 0; index < expression.Length; index++)

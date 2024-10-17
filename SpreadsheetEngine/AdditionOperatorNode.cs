@@ -18,10 +18,10 @@ namespace SpreadsheetEngine
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AdditionOperatorNode"/> class.
-        /// Constructor inherited from OperatorNode. Not really necassary.
+        /// Constructor inherited from OperatorNode.
         /// </summary>
         public AdditionOperatorNode()
-            : base("+")
+            : base("+", 0)
         {
         }
 
