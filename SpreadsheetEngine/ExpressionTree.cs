@@ -54,6 +54,24 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// Check if tree root is null.
+        /// </summary>
+        /// <returns>
+        /// Returns true if it is null, false otherwise.
+        /// </returns>
+        public bool IsRootNull()
+        {
+            if (this.root == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// public evaluation function that takes no parameters, but
         /// returns the value of expression as a double.
         /// </summary>
@@ -71,7 +89,7 @@ namespace SpreadsheetEngine
             else
             {
                 Console.WriteLine("Tree is null. Cannot evaluate.");
-                return 0; // what should I replace this with? Have not learned error handeling yet.
+                return double.NaN; // what should I replace this with? Have not learned error handeling yet.
             }
         }
 
@@ -186,11 +204,6 @@ namespace SpreadsheetEngine
                                     // incoming operator has higher precedence, or same procedence and right associative
                                     else if ((curOp.Precedence > stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "right"))
                                     {
-                                        // pop
-                                        //char op = operatorNodes.Pop();
-                                        //stackOp = operatorNodeFactory.CreateOperatorNode(op);
-                                        //output.Add(stackOp);
-
                                         // push
                                         operatorNodes.Push(i);
                                     }
