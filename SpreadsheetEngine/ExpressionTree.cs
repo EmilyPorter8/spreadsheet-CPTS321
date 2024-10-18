@@ -184,12 +184,12 @@ namespace SpreadsheetEngine
 
                                     // Option 2.
                                     // incoming operator has higher precedence, or same procedence and right associative
-                                    else if ((curOp.Precedence > stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "left"))
+                                    else if ((curOp.Precedence > stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "right"))
                                     {
                                         // pop
-                                        char op = operatorNodes.Pop();
-                                        stackOp = operatorNodeFactory.CreateOperatorNode(op);
-                                        output.Add(stackOp);
+                                        //char op = operatorNodes.Pop();
+                                        //stackOp = operatorNodeFactory.CreateOperatorNode(op);
+                                        //output.Add(stackOp);
 
                                         // push
                                         operatorNodes.Push(i);
@@ -197,10 +197,10 @@ namespace SpreadsheetEngine
 
                                     // Option 3.
                                     // incoming operator has lower precedence, or same procedence and left associative
-                                    else if ((curOp.Precedence < stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "right"))
+                                    else if ((curOp.Precedence < stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "left"))
                                     {
                                         // pop until incoming has higher precedence, then push it.
-                                        while (operatorNodes.Count != 0 && curOp.Precedence < operatorNodeFactory.CreateOperatorNode(operatorNodes.Peek()).Precedence)
+                                        while (operatorNodes.Count != 0 && curOp.Precedence <= operatorNodeFactory.CreateOperatorNode(operatorNodes.Peek()).Precedence)
                                         {
                                             char op = operatorNodes.Pop();
                                             stackOp = operatorNodeFactory.CreateOperatorNode(op);

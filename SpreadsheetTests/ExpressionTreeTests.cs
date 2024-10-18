@@ -116,6 +116,17 @@ namespace SpreadsheetTests
         }
 
         /// <summary>
+        /// Normal test if tree results in correct result with multiple operators, parentheses, and variables.
+        /// </summary>
+        [Test]
+        public void NormalMultipleOperatorsTest0()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("2+3*4-5/5");
+            tree.SetVariable("A5", 3);
+            Assert.That(tree.Evaluate(), Is.EqualTo(13));
+        }
+
+        /// <summary>
         /// Boundary test if tree results in correct result with many parentheses.
         /// </summary>
         [Test]
