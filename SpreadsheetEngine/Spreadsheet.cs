@@ -142,7 +142,8 @@ namespace SpreadsheetEngine
         /// </summary>
         private void InitializeSpreadsheet()
         {
-            if (this.rowCount > 0 && this.columnCount > 0) // valid input?
+            // valid input?
+            if (this.rowCount > 0 && this.columnCount > 0)
             {
                 this.spreadsheet = new BasicCell[this.rowCount, this.columnCount]; // iniitilize size of spreadsheet.
 

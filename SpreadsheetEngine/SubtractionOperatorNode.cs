@@ -21,7 +21,7 @@ namespace SpreadsheetEngine
         /// Constructor inherited from OperatorNode.
         /// </summary>
         public SubtractionOperatorNode()
-            : base("-", 0)
+            : base("-", 0, "left")
         {
         }
 

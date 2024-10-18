@@ -16,7 +16,7 @@ namespace SpreadsheetEngine
     /// </summary>
     internal class VariableNode : Node
     {
-        private string value;
+        private string value; // value is the variable name.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableNode"/> class.
@@ -43,7 +43,8 @@ namespace SpreadsheetEngine
         /// </returns>
         public override double Evaluate(Dictionary<string, double> variables)
         {
-            if (variables.TryGetValue(this.value, out double result)) // try and get value from dictionary.
+            // try and get value from dictionary.
+            if (variables.TryGetValue(this.value, out double result))
             {
                 return result; // key is present, so return corresponding value.
             }

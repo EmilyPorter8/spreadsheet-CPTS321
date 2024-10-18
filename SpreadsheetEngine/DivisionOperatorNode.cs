@@ -21,7 +21,7 @@ namespace SpreadsheetEngine
         /// Constructor inherited from OperatorNode.
         /// </summary>
         public DivisionOperatorNode()
-            : base("/", 1)
+            : base("/", 1, "left")
         {
         }
 

@@ -42,8 +42,7 @@ namespace SpreadsheetEngine
                 case '/':
                     return new DivisionOperatorNode();
                 default:
-                    Console.WriteLine("\nUnavailable operator entered.");
-                    throw new NotImplementedException(); // software just autocorrected gave this to me. // TODO change
+                    return null; // software just autocorrected gave this to me. // TODO change
             }
         }
     }

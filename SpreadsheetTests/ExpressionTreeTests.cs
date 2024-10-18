@@ -136,5 +136,17 @@ namespace SpreadsheetTests
             // TODO fix result
             Assert.That(tree.Evaluate(), Is.EqualTo(0));
         }
+
+        /// <summary>
+        /// Exceptional test if tree results correctly with odd number of parentheses.
+        /// </summary>
+        [Test]
+        public void ExceptionalMultipleParenthesTest()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+3)))");
+
+            // TODO fix result
+            Assert.That(tree.Evaluate(), Is.EqualTo(0));
+        }
     }
 }
