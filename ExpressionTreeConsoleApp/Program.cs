@@ -29,7 +29,7 @@ namespace ExpressionTreeConsoleApp
             string valueInput = string.Empty;
             double value = 0.0;
             string name = string.Empty;
-            double result = 0.0;
+            double result = double.NaN;
             SpreadsheetEngine.ExpressionTree tree = null;
 
             while (response != 4) // go through loop until user gives 4.
@@ -48,6 +48,12 @@ namespace ExpressionTreeConsoleApp
                             Console.WriteLine("Enter Expression: ");
                             expression = Console.ReadLine();
                             tree = new SpreadsheetEngine.ExpressionTree(expression);
+                            if (tree.IsRootNull())
+                            {
+                                Console.WriteLine("Please enter new expression.");
+                                expression = string.Empty;
+                            }
+
                             break;
                         case 2:
                             Console.WriteLine("Enter variable name: ");
@@ -58,9 +64,18 @@ namespace ExpressionTreeConsoleApp
                             tree.SetVariable(name, value);
                             break;
                         case 3:
-                            Console.WriteLine("Expression evaluated to: ");
                             result = tree.Evaluate();
-                            Console.WriteLine(result);
+                            if (double.IsNaN(result))
+                            {
+                                Console.WriteLine(expression + " cannot be evaluated");
+                                expression = string.Empty;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Expression evaluated to: ");
+                                Console.WriteLine(result);
+                            }
+
                             break;
                         case 4:
                             Console.WriteLine("Done!");

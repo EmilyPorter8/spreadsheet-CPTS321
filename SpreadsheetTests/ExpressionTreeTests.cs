@@ -145,7 +145,7 @@ namespace SpreadsheetTests
             SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+/3)))))");
 
             // TODO fix result
-            Assert.That(tree.Evaluate(), Is.EqualTo(0));
+            Assert.That(tree.Evaluate(), Is.EqualTo(double.NaN));
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace SpreadsheetTests
             SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+3)))");
 
             // TODO fix result
-            Assert.That(tree.Evaluate(), Is.EqualTo(0));
+            Assert.That(tree.Evaluate(), Is.EqualTo(double.NaN));
         }
     }
 }
