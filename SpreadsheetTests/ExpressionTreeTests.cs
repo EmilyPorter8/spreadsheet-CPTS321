@@ -72,5 +72,81 @@ namespace SpreadsheetTests
             SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("B6/3");
             Assert.That(tree.Evaluate(), Is.EqualTo(0));
         }
+
+        /// <summary>
+        /// Normal test if tree results in correct result with multiple operators.
+        /// </summary>
+        [Test]
+        public void NormalMultipleOperatorsTest1()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("9/3*4");
+            Assert.That(tree.Evaluate(), Is.EqualTo(12));
+        }
+
+        /// <summary>
+        /// Normal test if tree results in correct result with multiple operators of different precedence.
+        /// </summary>
+        [Test]
+        public void NormalMultipleOperatorsTest2()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("9/3*4+5");
+            Assert.That(tree.Evaluate(), Is.EqualTo(17));
+        }
+
+        /// <summary>
+        /// Normal test if tree results in correct result with multiple operators, parentheses, and variables.
+        /// </summary>
+        [Test]
+        public void NormalMultipleOperatorsTest3()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(5-3)*(A5+20)");
+            tree.SetVariable("A5", 3);
+            Assert.That(tree.Evaluate(), Is.EqualTo(46));
+        }
+
+        /// <summary>
+        /// Normal test if tree results in correct result with multiple operators, parentheses, and variables.
+        /// </summary>
+        [Test]
+        public void NormalMultipleOperatorsTest4()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(5-3)*A5");
+            tree.SetVariable("A5", 3);
+            Assert.That(tree.Evaluate(), Is.EqualTo(6));
+        }
+
+        /// <summary>
+        /// Boundary test if tree results in correct result with many parentheses.
+        /// </summary>
+        [Test]
+        public void BoundaryMultipleOperatorsTest()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+3)))))");
+            Assert.That(tree.Evaluate(), Is.EqualTo(5));
+        }
+
+        /// <summary>
+        /// Exceptional test if tree results in correct result with incorrectly used multiple operators and tons of parentheses.
+        /// </summary>
+        [Test]
+        public void ExceptionalMultipleOperatorsTest()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+/3)))))");
+
+            // TODO fix result
+            Assert.That(tree.Evaluate(), Is.EqualTo(0));
+        }
+
+        /// <summary>
+        /// Exceptional test if tree results correctly with odd number of parentheses.
+        /// </summary>
+        [Test]
+        public void ExceptionalMultipleParenthesTest()
+        {
+            SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+3)))");
+
+            // TODO fix result
+            Assert.That(tree.Evaluate(), Is.EqualTo(0));
+        }
     }
 }

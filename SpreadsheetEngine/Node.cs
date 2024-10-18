@@ -30,6 +30,15 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Node"/> class.
+        /// Sets value to empty.
+        /// </summary>
+        public Node()
+        {
+            this.value = string.Empty;
+        }
+
+        /// <summary>
         /// Gets value, property Value that can get value.
         /// </summary>
         public object Value { get => this.value; }

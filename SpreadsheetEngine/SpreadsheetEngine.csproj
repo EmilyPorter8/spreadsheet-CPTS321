@@ -41,14 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionOperatorNode.cs" />
     <Compile Include="BasicCell.cs" />
     <Compile Include="Cell.cs" />
     <Compile Include="ConstantNode.cs" />
+    <Compile Include="DivisionOperatorNode.cs" />
     <Compile Include="ExpressionTree.cs" />
+    <Compile Include="MultiplicationOperatorNode.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="OperandNodeFactory.cs" />
     <Compile Include="OperatorNode.cs" />
+    <Compile Include="OperatorNodeFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spreadsheet.cs" />
+    <Compile Include="SubtractionOperatorNode.cs" />
     <Compile Include="VariableNode.cs" />
   </ItemGroup>
   <ItemGroup>
