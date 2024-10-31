@@ -22,8 +22,15 @@ namespace SpreadsheetEngine
     /// </summary>
     public class ExpressionTree
     {
-        private Dictionary<string, double> variables = new Dictionary<string, double>(); // dictionary of user inputted variables.
-        private OperatorNode root; // root of expression tree.
+        /// <summary>
+        /// dictionary of user inputted variables.
+        /// </summary>
+        private Dictionary<string, double> variables = new Dictionary<string, double>();
+
+        /// <summary>
+        /// root of expression tree.
+        /// </summary>
+        private OperatorNode root;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
@@ -257,9 +264,10 @@ namespace SpreadsheetEngine
             while (operatorNodes.Count != 0)
             {
                 char op = operatorNodes.Pop();
-                OperatorNode tempOperator = operatorNodeFactory.CreateOperatorNode(op);
-                if (tempOperator != null)
+
+                if (op != '(')
                 {
+                    OperatorNode tempOperator = operatorNodeFactory.CreateOperatorNode(op);
                     output.Add(operatorNodeFactory.CreateOperatorNode(op));
                 }
                 else

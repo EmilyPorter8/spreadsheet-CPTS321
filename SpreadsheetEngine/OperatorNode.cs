@@ -18,10 +18,25 @@ namespace SpreadsheetEngine
     /// </summary>
     internal abstract class OperatorNode : Node
     {
-        private Node left; // left child of this node.
-        private Node right; // right child of this node.
-        private int precedence; // should be inherited and assigned in child class.
-        private string association; // left or right, set by child class.
+        /// <summary>
+        /// left child of this node.
+        /// </summary>
+        private Node left;
+
+        /// <summary>
+        /// right child of this node.
+        /// </summary>
+        private Node right;
+
+        /// <summary>
+        /// should be inherited and assigned in child class.
+        /// </summary>
+        private int precedence;
+
+        /// <summary>
+        /// left or right, set by child class.
+        /// </summary>
+        private string association;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OperatorNode"/> class.
@@ -43,6 +58,7 @@ namespace SpreadsheetEngine
             this.left = null;
             this.right = null;
             this.association = association;
+            this.Operator = value[0];
         }
 
         /// <summary>
@@ -71,6 +87,11 @@ namespace SpreadsheetEngine
         {
             get => this.right;
             set => this.right = value;
+        }
+
+        public char Operator
+        { get;
+            set;
         }
 
         /// <summary>

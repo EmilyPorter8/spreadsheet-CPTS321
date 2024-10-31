@@ -1,4 +1,5 @@
-﻿namespace Spreadsheet_Emily_Porter
+﻿
+namespace Spreadsheet_Emily_Porter
 {
     partial class Form1
     {
@@ -44,6 +45,8 @@
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.Size = new Size(800, 450);
             dataGridView1.TabIndex = 0;
+            //dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            dataGridView1.CellBeginEdit += DataGridView1_CellBeginEdit;
             dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
             // 
             // hw4demo

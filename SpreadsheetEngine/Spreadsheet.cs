@@ -97,14 +97,17 @@ namespace SpreadsheetEngine
         /// </param>
         internal void Evaluate(Cell curCell)
         {
+            // bool finishColumnRead = false;
             // will add future implementation of operators here.
             if (curCell.Text.Length >= 3 && curCell.Text[0] == '=')
             {
                 // only the initilization to cell ID
                 int columnIndex = curCell.Text[1] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
+
                 string rowIndexString = curCell.Text.Substring(2);
                 if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
                 {
+                    rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
                     if (this.GetCell(rowIndex, columnIndex) != null)
                     {
                         curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
