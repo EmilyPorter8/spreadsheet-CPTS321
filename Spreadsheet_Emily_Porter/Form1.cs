@@ -46,10 +46,10 @@ namespace Spreadsheet_Emily_Porter
                 this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value = cell.Value; // update text in datagridview cell.
             }
 
-            //if (cell != null && e.PropertyName == "Text") // this is not necassary
-            //{
+            // if (cell != null && e.PropertyName == "Text") // this is not necassary
+            // {
             //    cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value; // update text in spreadsheet cell.
-            //}
+            // }
         }
 
         /// <summary>
@@ -68,10 +68,11 @@ namespace Spreadsheet_Emily_Porter
             {
                 cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value; // update text in spreadsheet cell.
             }
-            else
-            {
-                cell.Text = string.Empty;
-            }
+
+            // else
+            // {
+            //    cell.Text = string.Empty;
+            // }
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace Spreadsheet_Emily_Porter
             Cell cell = this.spreadsheet.GetCell(e.RowIndex, e.ColumnIndex); // What is the cell we are going to update?
             if (cell != null)
             {
-                //cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].; // update text in spreadsheet cell.
+                // cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].; // update text in spreadsheet cell.
                 this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Text;
             }
             else
@@ -143,10 +144,5 @@ namespace Spreadsheet_Emily_Porter
                 cell.Text = ha;
             }
         }
-
-        //private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        //{
-
-        //}
     }
 }

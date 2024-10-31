@@ -13,6 +13,7 @@ namespace SpreadsheetEngine
     using System.ComponentModel;
     using System.Data;
     using System.Linq;
+    using System.Runtime.ExceptionServices;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -101,26 +102,52 @@ namespace SpreadsheetEngine
             // will add future implementation of operators here.
             if (curCell.Text.Length >= 3 && curCell.Text[0] == '=')
             {
-                // only the initilization to cell ID
-                int columnIndex = curCell.Text[1] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
-
-                string rowIndexString = curCell.Text.Substring(2);
-                if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
+                // grab the actual expression.
+                string expression = curCell.Text.Substring(1);
+                ExpressionTree tree = new SpreadsheetEngine.ExpressionTree(expression);
+                if (tree.IsRootNull())
                 {
-                    rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
-                    if (this.GetCell(rowIndex, columnIndex) != null)
+                    // TODO : this should be an exception handeling thing
+                    Console.WriteLine("Please enter new expression.");
+                    curCell.Value = "!ERROR!";
+                }
+
+                Dictionary<string, double> variables = tree.GetVariableNames();
+                foreach (var item in variables)
+                {
+                    // only the initilization to cell ID
+                    int columnIndex = item.Key[0] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
+                    string rowIndexString = item.Key.Substring(1);
+                    if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
                     {
-                        curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
+                        rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
+                        if (this.GetCell(rowIndex, columnIndex) != null)
+                        {
+                            if (double.TryParse(this.GetCell(rowIndex, columnIndex).Value, out double value))
+                            {
+                                tree.SetVariable(item.Key, value);
+                            }
+                            else
+                            {
+                                // TODO throw error;
+                                curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
+                                Console.WriteLine(item.Key + "unable to be found");
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                        }
                     }
                     else
                     {
-                        curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                        curCell.Value = "!ERROR!"; // row index doesnt fit format, so error.
                     }
                 }
-                else
-                {
-                    curCell.Value = "!ERROR!"; // row index doesnt fit format, so error.
-                }
+
+                // set all variables, so now evaluate
+                curCell.Value = tree.Evaluate().ToString();
             }
             else
             {
