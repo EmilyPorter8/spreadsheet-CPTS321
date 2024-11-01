@@ -70,7 +70,7 @@ namespace SpreadsheetTests
         public void ExceptionalEvaluateTest()
         {
             SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("B6/3");
-            Assert.That(tree.Evaluate(), Is.EqualTo(0));
+            Assert.That(tree.Evaluate(), Is.EqualTo(double.NaN));
         }
 
         /// <summary>
@@ -143,8 +143,6 @@ namespace SpreadsheetTests
         public void ExceptionalMultipleOperatorsTest()
         {
             SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+/3)))))");
-
-            // TODO fix result
             Assert.That(tree.Evaluate(), Is.EqualTo(double.NaN));
         }
 
@@ -155,8 +153,6 @@ namespace SpreadsheetTests
         public void ExceptionalMultipleParenthesTest()
         {
             SpreadsheetEngine.ExpressionTree tree = new SpreadsheetEngine.ExpressionTree("(((((2+3)))");
-
-            // TODO fix result
             Assert.That(tree.Evaluate(), Is.EqualTo(double.NaN));
         }
     }

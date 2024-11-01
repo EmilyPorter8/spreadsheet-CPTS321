@@ -57,7 +57,7 @@ namespace SpreadsheetEngine
         {
             if (this.operators.ContainsKey(op))
             {
-                object operatorNodeObject = Activator.CreateInstance(operators[op]);
+                object operatorNodeObject = Activator.CreateInstance(this.operators[op]);
                 if (operatorNodeObject is OperatorNode)
                 {
                     return (OperatorNode)operatorNodeObject;
@@ -68,6 +68,7 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// USED CODE FROM CLASS SLIDES.
         /// Iterates through all types to see if there is an operatornode that matches with onOperator.
         /// </summary>
         /// <param name="onOperator">
@@ -93,17 +94,10 @@ namespace SpreadsheetEngine
 
                     if (operatorField != null)
                     {
-                        // Get the character of the Operator
-                       // object value = operatorField.GetValue(type);
-                        // activator
-                        // If “Operator” property is not static, you will need to create
-                        // an instance first and use the following code instead (or similar):
                         object value = operatorField.GetValue(Activator.CreateInstance(type));
                         if (value is char)
                         {
                             char operatorSymbol = (char)value;
-                            // And invoke the function passed as parameter
-                            // with the operator symbol and the operator class
                             onOperator(operatorSymbol, type);
                         }
                     }

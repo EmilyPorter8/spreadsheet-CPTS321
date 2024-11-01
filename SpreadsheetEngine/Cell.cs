@@ -38,8 +38,10 @@ namespace SpreadsheetEngine
         /// </summary>
         private string value;
 
-        private List<Cell> independentCells;
-
+        /// <summary>
+        /// List of cells that the current cell is dependent on.
+        /// </summary>
+        private List<Cell> dependentCells;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
@@ -57,7 +59,7 @@ namespace SpreadsheetEngine
             this.columnindex = newColumnIndex;
             this.text = string.Empty;
             this.value = string.Empty;
-            this.independentCells = new List<Cell> { };
+            this.dependentCells = new List<Cell> { };
         }
 
         /// <summary>
@@ -91,9 +93,17 @@ namespace SpreadsheetEngine
                 {
                     // text is actually being changed.
                     this.value = value;
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("Value"));
+                    this.OnPropertyChanged("Value");
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the dependentcells list.
+        /// </summary>
+        public List<Cell> DependentCells
+        {
+            get => this.dependentCells;
         }
 
         /// <summary>
@@ -113,8 +123,55 @@ namespace SpreadsheetEngine
                 {
                     // text is actually being changed.
                     this.text = value;
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("Text"));
+                    this.OnPropertyChanged("Text");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Adds the cell that this current cell is dependent on to the dependent cell library.
+        /// Subscribes this current cell to the changes of dependent cell so that when
+        /// dependent cell changes it will update this cell.
+        /// </summary>
+        /// <param name="dependentCell">
+        /// cell that this current cell depends on.
+        /// </param>
+        public void AddDependency(Cell dependentCell)
+        {
+            if (!this.dependentCells.Contains(dependentCell)) // does it already exist?
+            {
+                this.dependentCells.Add(dependentCell); // add to list.
+                dependentCell.PropertyChanged += this.PropertyChanged; // subscribe.
+            }
+        }
+
+        /// <summary>
+        /// Called everytime I evaluate. Removes all dependencies when the cell is being changed if it s a funciton.
+        /// </summary>
+        public void RemoveDependencies()
+        {
+            foreach (Cell dependentCell in this.dependentCells)
+            {
+                dependentCell.PropertyChanged -= this.PropertyChanged; // unsubscribe.
+            }
+
+            this.dependentCells.Clear(); // clear the libaray.
+        }
+
+        /// <summary>
+        /// called for when dependentcell is changed.
+        /// </summary>
+        /// <param name="sender">
+        /// cell that is changed.
+        /// </param>
+        /// <param name="e">
+        /// what property has changed.
+        /// </param>
+        public void OnDependencyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Value")
+            {
+                this.OnPropertyChanged("Text"); // we changed the value of the dependency, so tell current cell that text has changed.
             }
         }
 
@@ -127,18 +184,6 @@ namespace SpreadsheetEngine
         protected void OnPropertyChanged(string propertyName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void AddDependency(Cell independentCell)
-        {
-            this.independentCells.Add(independentCell);
-            independentCell.PropertyChanged += this.PropertyChanged;
-            this.PropertyChanged(this, new PropertyChangedEventArgs("Dependency"));
-        }
-
-        public void RemoveDependencies()
-        {
-            this.independentCells.Clear();
         }
     }
 }

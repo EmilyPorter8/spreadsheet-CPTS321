@@ -98,21 +98,38 @@ namespace SpreadsheetEngine
         /// </returns>
         public double Evaluate()
         {
-            if (this.root != null)
+            try
             {
-                double result = this.root.Evaluate(this.variables);
+                if (this.root != null)
+                {
+                    double result = this.root.Evaluate(this.variables);
 
-                return result;
+                    return result;
+                }
+                else
+                { // if tree is null, throw exception.
+                    throw new InvalidOperationException("Tree is null, cannot evaluate.");
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                Console.WriteLine("Tree is null. Cannot evaluate.");
-                return double.NaN; // what should I replace this with? Have not learned error handeling yet.
+                Console.WriteLine($"Evaluation error: {ex.Message}");
+                return double.NaN;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Console.WriteLine($"Variable dictionary error: {ex.Message}");
+                return double.NaN;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return double.NaN;
             }
         }
 
         /// <summary>
-        /// This is a test implementation of Shunting Yard algorithm.  TODO fix.
+        /// This is an implementation of Shunting Yard algorithm.
         /// </summary>
         /// <param name="expression">
         /// user inputted infix expression.

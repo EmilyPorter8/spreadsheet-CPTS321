@@ -108,6 +108,8 @@ namespace SpreadsheetEngine
         /// </param>
         internal void Evaluate(Cell curCell)
         {
+            curCell.RemoveDependencies();
+
             // bool finishColumnRead = false;
             // will add future implementation of operators here.
             if (curCell.Text.Length >= 2 && curCell.Text[0] == '=')
@@ -120,42 +122,67 @@ namespace SpreadsheetEngine
                     // TODO : this should be an exception handeling thing
                     Console.WriteLine("Please enter new expression.");
                     curCell.Value = "!ERROR!";
+                    return;
                 }
 
                 Dictionary<string, double> variables = tree.GetVariableNames();
-                foreach (var item in variables)
+                try
                 {
-                    // only the initilization to cell ID
-                    int columnIndex = item.Key[0] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
-                    string rowIndexString = item.Key.Substring(1);
-                    if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
+                    foreach (var item in variables)
                     {
-                        rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
-                        Cell variableCell = this.GetCell(rowIndex, columnIndex);
-                        if (variableCell != null)
+                        // only the initilization to cell ID
+                        int columnIndex = item.Key[0] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
+                        string rowIndexString = item.Key.Substring(1);
+                        if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
                         {
-                            curCell.AddDependency(variableCell);
-                            if (double.TryParse(variableCell.Value, out double value))
+                            rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
+                            Cell variableCell = this.GetCell(rowIndex, columnIndex);
+                            if (variableCell != null)
                             {
-                                tree.SetVariable(item.Key, value);
+                                curCell.AddDependency(variableCell); // add the variable to the dependency list.
+                                variableCell.PropertyChanged += curCell.OnDependencyChanged; // subscribe cur cell to variable cell.
+                                if (double.TryParse(variableCell.Value, out double value))
+                                {
+                                    tree.SetVariable(item.Key, value); // set the value of varibale.
+                                }
+                                else
+                                {
+                                    // TODO throw error;
+                                    if (variableCell.Value == string.Empty)
+                                    {
+                                        curCell.Value = string.Empty;
+                                    }
+                                    else
+                                    {
+                                        curCell.Value = variableCell.Value;
+                                    }
+
+                                    Console.WriteLine(item.Key + "unable to be found");
+                                    return;
+                                }
                             }
                             else
                             {
-                                // TODO throw error;
-                                curCell.Value = variableCell.Value;
-                                Console.WriteLine(item.Key + "unable to be found");
-                                return;
+                                // curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                                throw new IndexOutOfRangeException("variable row and column index are out of range, so error.");
                             }
                         }
                         else
                         {
-                            curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                            // curCell.Value = "!ERROR!"; // row index doesnt fit format, so error.
+                            throw new IndexOutOfRangeException("Current cell is out of bounds.");
                         }
                     }
-                    else
-                    {
-                        curCell.Value = "!ERROR!"; // row index doesnt fit format, so error.
-                    }
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    Console.WriteLine($"Evaluation error: {ex.Message}");
+                    curCell.Value = "!ERROR!";
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unexpected error: {ex.Message}");
+                    curCell.Value = "!ERROR!";
                 }
 
                 // set all variables, so now evaluate
@@ -219,17 +246,27 @@ namespace SpreadsheetEngine
         private void SpreadsheetPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Cell curCell = sender as Cell; // caste sender as a cell.
-
-            if (curCell.Text[0] == '=') // check if text needs to be evaluated.
+            if (e.PropertyName == "Text")
             {
-                this.Evaluate(curCell); // if text needs to be evaluated, call function.
-            }
-            else
-            {
-                curCell.Value = curCell.Text; // text isnt function, so just set value as cell content.
+                if (curCell.Text[0] == '=') // check if text needs to be evaluated.
+                {
+                    this.Evaluate(curCell); // if text needs to be evaluated, call function.
+                }
+                else
+                {
+                    curCell.Value = curCell.Text; // text isnt function, so just set value as cell content.
+                }
             }
 
             this.CellPropertyChanged?.Invoke(curCell, e); // raise notificaiton to subscribers that spreadsheet changed.
+
+            foreach (Cell cell in curCell.DependentCells)
+            {
+                if (cell.Text[0] == '=')
+                {
+                    this.Evaluate(cell);
+                }
+            }
         }
     }
 }

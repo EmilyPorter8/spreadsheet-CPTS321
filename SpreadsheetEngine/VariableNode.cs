@@ -53,7 +53,8 @@ namespace SpreadsheetEngine
             }
             else
             {
-                return 0; // key isnt present, return 0.
+                // key isnt present, throw exception.
+                throw new KeyNotFoundException("variable '{this.value}' does not have a value.");
             }
         }
     }

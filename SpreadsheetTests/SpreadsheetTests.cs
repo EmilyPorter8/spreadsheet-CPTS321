@@ -218,8 +218,9 @@ namespace SpreadsheetTests
             this.testNormal.GetSpreadsheet()[0, 0].Text = "3";
             this.testNormal.GetSpreadsheet()[0, 1].Text = "4";
             this.testNormal.GetSpreadsheet()[0, 2].Text = "=A1+B1";
-            this.testNormal.GetSpreadsheet()[0, 3].Text = "5";
-            this.testNormal.GetSpreadsheet()[0, 2].Text = "=A1+C1";
+            Console.WriteLine("here");
+            this.testNormal.GetSpreadsheet()[1, 0].Text = "5";
+            this.testNormal.GetSpreadsheet()[0, 2].Text = "=A1+A2";
             Assert.That(this.testNormal.GetCell(0, 2).Value, Is.EqualTo("8"));
         }
     }
