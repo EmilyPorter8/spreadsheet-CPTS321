@@ -89,9 +89,14 @@ namespace SpreadsheetEngine
             set => this.right = value;
         }
 
+        /// <summary>
+        /// Gets the symbol for the operatorchildnode.
+        /// </summary>
         public char Operator
-        { get;
-            set;
+        {
+            get;
+
+            // set;
         }
 
         /// <summary>

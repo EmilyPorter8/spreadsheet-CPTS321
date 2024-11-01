@@ -16,6 +16,9 @@ namespace SpreadsheetEngine
     /// </summary>
     public abstract class Node
     {
+        /// <summary>
+        /// value of the node. this could be a number, variable, or a operator char.
+        /// </summary>
         private string value;
 
         /// <summary>

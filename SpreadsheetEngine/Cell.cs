@@ -14,14 +14,32 @@ namespace SpreadsheetEngine
     using System.Threading.Tasks;
 
     /// <summary>
-    /// HW4 Part 4.
+    /// abstract cell class that base cell will inherit from.
     /// </summary>
     public abstract class Cell : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Row index of the cell.
+        /// </summary>
         private readonly int rowindex;
+
+        /// <summary>
+        /// Column index of the cell.
+        /// </summary>
         private readonly int columnindex;
-        private string text; // what we show to user.
-        private string value; // what cell actually contains.
+
+        /// <summary>
+        /// String that is shown to the user, result of some function.
+        /// </summary>
+        private string text;
+
+        /// <summary>
+        /// User inputted value.
+        /// </summary>
+        private string value;
+
+        private List<Cell> independentCells;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cell"/> class.
@@ -39,6 +57,7 @@ namespace SpreadsheetEngine
             this.columnindex = newColumnIndex;
             this.text = string.Empty;
             this.value = string.Empty;
+            this.independentCells = new List<Cell> { };
         }
 
         /// <summary>
@@ -108,6 +127,18 @@ namespace SpreadsheetEngine
         protected void OnPropertyChanged(string propertyName)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void AddDependency(Cell independentCell)
+        {
+            this.independentCells.Add(independentCell);
+            independentCell.PropertyChanged += this.PropertyChanged;
+            this.PropertyChanged(this, new PropertyChangedEventArgs("Dependency"));
+        }
+
+        public void RemoveDependencies()
+        {
+            this.independentCells.Clear();
         }
     }
 }

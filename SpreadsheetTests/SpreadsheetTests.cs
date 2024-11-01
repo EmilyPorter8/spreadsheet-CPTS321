@@ -195,5 +195,32 @@ namespace SpreadsheetTests
             this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
             Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!ERROR!"));
         }
+
+        /// <summary>
+        /// test to see if the spreadsheet will update cell correctly.
+        /// </summary>
+        [Test]
+        public void DependentNormalTest1()
+        {
+            this.testNormal.GetSpreadsheet()[0, 0].Text = "3";
+            this.testNormal.GetSpreadsheet()[0, 1].Text = "4";
+            this.testNormal.GetSpreadsheet()[0, 2].Text = "=A1+B1";
+            this.testNormal.GetSpreadsheet()[0, 1].Text = "5";
+            Assert.That(this.testNormal.GetCell(0, 2).Value, Is.EqualTo("8"));
+        }
+
+        /// <summary>
+        /// test to see if the spreadsheet will update cell correctly.
+        /// </summary>
+        [Test]
+        public void DependentNormalTest2()
+        {
+            this.testNormal.GetSpreadsheet()[0, 0].Text = "3";
+            this.testNormal.GetSpreadsheet()[0, 1].Text = "4";
+            this.testNormal.GetSpreadsheet()[0, 2].Text = "=A1+B1";
+            this.testNormal.GetSpreadsheet()[0, 3].Text = "5";
+            this.testNormal.GetSpreadsheet()[0, 2].Text = "=A1+C1";
+            Assert.That(this.testNormal.GetCell(0, 2).Value, Is.EqualTo("8"));
+        }
     }
 }

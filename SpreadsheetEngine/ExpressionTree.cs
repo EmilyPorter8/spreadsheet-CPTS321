@@ -125,7 +125,6 @@ namespace SpreadsheetEngine
             string curToken = string.Empty;
             Node curNode = null;
             OperatorNodeFactory operatorNodeFactory = new OperatorNodeFactory();
-            //OperandNodeFactory operandNodeFactory = new OperandNodeFactory();
             List<Node> output = new List<Node>(); // postfix expression of nodes.
             Stack<char> operatorNodes = new Stack<char>(); // shunting yard operator stack.
 

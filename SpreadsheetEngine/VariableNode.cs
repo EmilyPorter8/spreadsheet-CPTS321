@@ -16,7 +16,10 @@ namespace SpreadsheetEngine
     /// </summary>
     internal class VariableNode : Node
     {
-        private string value; // value is the variable name.
+        /// <summary>
+        /// variable name.
+        /// </summary>
+        private string value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableNode"/> class.

@@ -22,9 +22,19 @@ namespace SpreadsheetEngine
     /// </summary>
     public class Spreadsheet
     {
-        // private BasicCell[][] spreadsheet;
+        /// <summary>
+        /// two d array of cells making up the spreadsheet itself.
+        /// </summary>
         private Cell[,] spreadsheet;
+
+        /// <summary>
+        /// The amount of rows in the spreadsheet.
+        /// </summary>
         private int rowCount;
+
+        /// <summary>
+        /// The amount of columns in the spreadsheet.
+        /// </summary>
         private int columnCount;
 
         /// <summary>
@@ -100,7 +110,7 @@ namespace SpreadsheetEngine
         {
             // bool finishColumnRead = false;
             // will add future implementation of operators here.
-            if (curCell.Text.Length >= 3 && curCell.Text[0] == '=')
+            if (curCell.Text.Length >= 2 && curCell.Text[0] == '=')
             {
                 // grab the actual expression.
                 string expression = curCell.Text.Substring(1);
@@ -121,16 +131,18 @@ namespace SpreadsheetEngine
                     if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
                     {
                         rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
-                        if (this.GetCell(rowIndex, columnIndex) != null)
+                        Cell variableCell = this.GetCell(rowIndex, columnIndex);
+                        if (variableCell != null)
                         {
-                            if (double.TryParse(this.GetCell(rowIndex, columnIndex).Value, out double value))
+                            curCell.AddDependency(variableCell);
+                            if (double.TryParse(variableCell.Value, out double value))
                             {
                                 tree.SetVariable(item.Key, value);
                             }
                             else
                             {
                                 // TODO throw error;
-                                curCell.Value = this.GetCell(rowIndex, columnIndex).Value;
+                                curCell.Value = variableCell.Value;
                                 Console.WriteLine(item.Key + "unable to be found");
                                 return;
                             }

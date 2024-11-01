@@ -16,7 +16,10 @@ namespace SpreadsheetEngine
     /// </summary>
     internal class ConstantNode : Node
     {
-        private double value; // value of constant node, should always be a double or integer.
+        /// <summary>
+        /// value of constant node, should always be a double or integer.
+        /// </summary>
+        private double value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstantNode"/> class.
