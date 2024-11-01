@@ -22,8 +22,15 @@ namespace SpreadsheetEngine
     /// </summary>
     public class ExpressionTree
     {
-        private Dictionary<string, double> variables = new Dictionary<string, double>(); // dictionary of user inputted variables.
-        private OperatorNode root; // root of expression tree.
+        /// <summary>
+        /// dictionary of user inputted variables.
+        /// </summary>
+        private Dictionary<string, double> variables = new Dictionary<string, double>();
+
+        /// <summary>
+        /// root of expression tree.
+        /// </summary>
+        private Node root;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionTree"/> class.
@@ -72,6 +79,17 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// gets the dictionary of variables from expression. Spreadsheet will use this to find what the actual values of the cells are.
+        /// </summary>
+        /// <returns>
+        /// dictionary of variables in expression.
+        /// </returns>
+        public Dictionary<string, double> GetVariableNames()
+        {
+            return this.variables;
+        }
+
+        /// <summary>
         /// public evaluation function that takes no parameters, but
         /// returns the value of expression as a double.
         /// </summary>
@@ -80,21 +98,38 @@ namespace SpreadsheetEngine
         /// </returns>
         public double Evaluate()
         {
-            if (this.root != null)
+            try
             {
-                double result = this.root.Evaluate(this.variables);
+                if (this.root != null)
+                {
+                    double result = this.root.Evaluate(this.variables);
 
-                return result;
+                    return result;
+                }
+                else
+                { // if tree is null, throw exception.
+                    throw new InvalidOperationException("Tree is null, cannot evaluate.");
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                Console.WriteLine("Tree is null. Cannot evaluate.");
-                return double.NaN; // what should I replace this with? Have not learned error handeling yet.
+                Console.WriteLine($"Evaluation error: {ex.Message}");
+                return double.NaN;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Console.WriteLine($"Variable dictionary error: {ex.Message}");
+                return double.NaN;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return double.NaN;
             }
         }
 
         /// <summary>
-        /// This is a test implementation of Shunting Yard algorithm.  TODO fix.
+        /// This is an implementation of Shunting Yard algorithm.
         /// </summary>
         /// <param name="expression">
         /// user inputted infix expression.
@@ -107,7 +142,6 @@ namespace SpreadsheetEngine
             string curToken = string.Empty;
             Node curNode = null;
             OperatorNodeFactory operatorNodeFactory = new OperatorNodeFactory();
-            OperandNodeFactory operandNodeFactory = new OperandNodeFactory();
             List<Node> output = new List<Node>(); // postfix expression of nodes.
             Stack<char> operatorNodes = new Stack<char>(); // shunting yard operator stack.
 
@@ -115,131 +149,137 @@ namespace SpreadsheetEngine
             for (int index = 0; index < expression.Length; index++)
             {
                 char i = expression[index]; // i is the current char.
-
-                if ((i <= 'Z' && i >= 'A') || (i <= 'z' && i >= 'a') || (i - '0' <= 9 && i - '0' >= 0))
+                if (i == ' ')
                 {
-                    // this is a number or char
-                    curToken += i;
+                    // white space, so we should move on.
                 }
                 else
                 {
-                    // curToken should be null if parentheses.
-                    if (i == '(')
+                    if ((i <= 'Z' && i >= 'A') || (i <= 'z' && i >= 'a') || (i - '0' <= 9 && i - '0' >= 0))
                     {
-                        if (curToken != string.Empty) // this is multiplication. for 3(1+2) type expressions.
-                        {
-                            operatorNodes.Push('*');
-                            curNode = operandNodeFactory.CreateOperandNode(curToken);
-                            output.Add(curNode);
-                            curToken = string.Empty;
-                        }
-
-                        operatorNodes.Push('(');
+                        // this is a number or char
+                        curToken += i;
                     }
                     else
                     {
-                        // must be an operator, parenthesis, or end.
-                        // operand at the end of the expression that doesn't get parsed.
-                        if (curToken != string.Empty)
+                        // curToken should be null if parentheses.
+                        if (i == '(')
                         {
-                            curNode = operandNodeFactory.CreateOperandNode(curToken);
-                            output.Add(curNode);
-                            curToken = string.Empty;
-                        }
-
-                        if (i == ')')
-                        {
-                            // time to pop until (.
-                            bool successParentheses = false;
-                            while (operatorNodes.Count != 0 && successParentheses == false) // pop from operatorNodes until other side of parentheses is found.
+                            if (curToken != string.Empty) // this is multiplication. for 3(1+2) type expressions.
                             {
-                                char op = operatorNodes.Pop(); // take first operator.
-                                if (op == '(')
-                                {
-                                    successParentheses = true; // we are done popping from stack.
-                                }
-                                else // add op to output.
-                                {
-                                    OperatorNode tempOp = operatorNodeFactory.CreateOperatorNode(op);
-                                    if (tempOp != null)
-                                    {
-                                        output.Add(operatorNodeFactory.CreateOperatorNode(op));
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("\nShunting Yard Error: Operator not found."); // operator inputted by user is not avaliable operator.
-                                        return null;
-                                    }
-                                }
+                                operatorNodes.Push('*');
+                                curNode = this.CreateOperandNode(curToken);
+                                output.Add(curNode);
+                                curToken = string.Empty;
                             }
 
-                            if (successParentheses == false)
-                            {
-                                // reached the end of the stack without finding (, so expression is not balanced.
-                                Console.WriteLine("\nShunting Yard Error: Expression is not balanced. Could not find matching '(' symbol.");
-                                return null;
-                            }
+                            operatorNodes.Push('(');
                         }
-
-                        // this is an operator.
                         else
                         {
-                            OperatorNode curOp = operatorNodeFactory.CreateOperatorNode(i); // create OperatorNode from current spot in expression.
-                            if (curOp != null)
+                            // must be an operator, parenthesis, or end.
+                            // operand at the end of the expression that doesn't get parsed.
+                            if (curToken != string.Empty)
                             {
-                                if (operatorNodes.Count != 0 && operatorNodes.Peek() != '(') // if stack is empty, push curOp onto stack.
+                                curNode = this.CreateOperandNode(curToken);
+                                output.Add(curNode);
+                                curToken = string.Empty;
+                            }
+
+                            if (i == ')')
+                            {
+                                // time to pop until (.
+                                bool successParentheses = false;
+                                while (operatorNodes.Count != 0 && successParentheses == false) // pop from operatorNodes until other side of parentheses is found.
                                 {
-                                    OperatorNode stackOp = operatorNodeFactory.CreateOperatorNode(operatorNodes.Peek()); // dont want to pop just yet.
-
-                                    // three possible options
-                                    // Option 1: stack is empty or '(' is already covered in line 171.
-                                    if (stackOp == null)
+                                    char op = operatorNodes.Pop(); // take first operator.
+                                    if (op == '(')
                                     {
-                                        // operator on node is not a supported operator type.
-                                        Console.WriteLine("\nShunting Yard Error: Something went wrong when trying to push/pop onto operator stack.");
-                                        return null;
+                                        successParentheses = true; // we are done popping from stack.
                                     }
-
-                                    // Option 2.
-                                    // incoming operator has higher precedence, or same procedence and right associative
-                                    else if ((curOp.Precedence > stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "right"))
+                                    else // add op to output.
                                     {
-                                        // push
-                                        operatorNodes.Push(i);
-                                    }
-
-                                    // Option 3.
-                                    // incoming operator has lower precedence, or same procedence and left associative
-                                    else if ((curOp.Precedence < stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "left"))
-                                    {
-                                        // pop until incoming has higher precedence, then push it.
-                                        while (operatorNodes.Count != 0 && curOp.Precedence <= operatorNodeFactory.CreateOperatorNode(operatorNodes.Peek()).Precedence)
+                                        OperatorNode tempOp = operatorNodeFactory.CreateOperatorNode(op);
+                                        if (tempOp != null)
                                         {
-                                            char op = operatorNodes.Pop();
-                                            stackOp = operatorNodeFactory.CreateOperatorNode(op);
-                                            output.Add(stackOp); // add the higher precedent stack operator to output.
+                                            output.Add(operatorNodeFactory.CreateOperatorNode(op));
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("\nShunting Yard Error: Operator not found."); // operator inputted by user is not avaliable operator.
+                                            return null;
+                                        }
+                                    }
+                                }
+
+                                if (successParentheses == false)
+                                {
+                                    // reached the end of the stack without finding (, so expression is not balanced.
+                                    Console.WriteLine("\nShunting Yard Error: Expression is not balanced. Could not find matching '(' symbol.");
+                                    return null;
+                                }
+                            }
+
+                            // this is an operator.
+                            else
+                            {
+                                OperatorNode curOp = operatorNodeFactory.CreateOperatorNode(i); // create OperatorNode from current spot in expression.
+                                if (curOp != null)
+                                {
+                                    if (operatorNodes.Count != 0 && operatorNodes.Peek() != '(') // if stack is empty, push curOp onto stack.
+                                    {
+                                        OperatorNode stackOp = operatorNodeFactory.CreateOperatorNode(operatorNodes.Peek()); // dont want to pop just yet.
+
+                                        // three possible options
+                                        // Option 1: stack is empty or '(' is already covered in line 171.
+                                        if (stackOp == null)
+                                        {
+                                            // operator on node is not a supported operator type.
+                                            Console.WriteLine("\nShunting Yard Error: Something went wrong when trying to push/pop onto operator stack.");
+                                            return null;
                                         }
 
-                                        operatorNodes.Push(i);
+                                        // Option 2.
+                                        // incoming operator has higher precedence, or same procedence and right associative
+                                        else if ((curOp.Precedence > stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "right"))
+                                        {
+                                            // push
+                                            operatorNodes.Push(i);
+                                        }
+
+                                        // Option 3.
+                                        // incoming operator has lower precedence, or same procedence and left associative
+                                        else if ((curOp.Precedence < stackOp.Precedence) || (curOp.Precedence == stackOp.Precedence && curOp.Association == "left"))
+                                        {
+                                            // pop until incoming has higher precedence, then push it.
+                                            while (operatorNodes.Count != 0 && curOp.Precedence <= operatorNodeFactory.CreateOperatorNode(operatorNodes.Peek()).Precedence)
+                                            {
+                                                char op = operatorNodes.Pop();
+                                                stackOp = operatorNodeFactory.CreateOperatorNode(op);
+                                                output.Add(stackOp); // add the higher precedent stack operator to output.
+                                            }
+
+                                            operatorNodes.Push(i);
+                                        }
+                                        else
+                                        {
+                                            // something has gone wrong.
+                                            Console.WriteLine("\nShunting Yard Error: Something random went wrong.");
+                                            return null;
+                                        }
                                     }
                                     else
                                     {
-                                        // something has gone wrong.
-                                        Console.WriteLine("\nShunting Yard Error: Something random went wrong.");
-                                        return null;
+                                        // if stack is empty, push curOp onto stack.
+                                        operatorNodes.Push(i);
                                     }
                                 }
                                 else
                                 {
-                                    // if stack is empty, push curOp onto stack.
-                                    operatorNodes.Push(i);
+                                    // something has gone wrong.
+                                    Console.WriteLine("\nShunting Yard Error: Something went wrong when trying to push/pop onto operator stack.");
+                                    return null;
                                 }
-                            }
-                            else
-                            {
-                                // something has gone wrong.
-                                Console.WriteLine("\nShunting Yard Error: Something went wrong when trying to push/pop onto operator stack.");
-                                return null;
                             }
                         }
                     }
@@ -248,7 +288,7 @@ namespace SpreadsheetEngine
 
             if (curToken != string.Empty) // operand at the end of the expression that doesn't get parsed.
             {
-                curNode = operandNodeFactory.CreateOperandNode(curToken);
+                curNode = this.CreateOperandNode(curToken);
                 output.Add(curNode);
                 curToken = string.Empty;
             }
@@ -257,9 +297,10 @@ namespace SpreadsheetEngine
             while (operatorNodes.Count != 0)
             {
                 char op = operatorNodes.Pop();
-                OperatorNode tempOperator = operatorNodeFactory.CreateOperatorNode(op);
-                if (tempOperator != null)
+
+                if (op != '(')
                 {
+                    OperatorNode tempOperator = operatorNodeFactory.CreateOperatorNode(op);
                     output.Add(operatorNodeFactory.CreateOperatorNode(op));
                 }
                 else
@@ -310,7 +351,7 @@ namespace SpreadsheetEngine
                     }
                 }
 
-                this.root = (OperatorNode)tree.Pop(); // tree is the final combination of different parts from stack.
+                this.root = tree.Pop(); // tree is the final combination of different parts from stack.
             }
             else
             {
@@ -318,6 +359,33 @@ namespace SpreadsheetEngine
                 this.root = null;
                 return;
             }
+        }
+
+        /// <summary>
+        /// Creates type of operand node depending on the string input.
+        /// </summary>
+        /// <param name="token">
+        /// token from user input.
+        /// </param>
+        /// <returns>
+        /// node of correct type.
+        /// </returns>
+        private Node CreateOperandNode(string token)
+        {
+            Node curNode = null;
+            if (int.TryParse(token, out int newValue))
+            {
+                // add new constant node.
+                curNode = new ConstantNode(token);
+            }
+            else
+            {
+                // add new variable node.
+                this.variables.Add(token, double.NaN);
+                curNode = new VariableNode(token);
+            }
+
+            return curNode;
         }
     }
 }

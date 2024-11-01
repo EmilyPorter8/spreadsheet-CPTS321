@@ -14,7 +14,7 @@ namespace Spreadsheet_Emily_Porter
     /// </summary>
     public partial class Form1 : Form
     {
-        private SpreadsheetEngine.Spreadsheet spreadsheetHW4;
+        private SpreadsheetEngine.Spreadsheet spreadsheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -24,8 +24,8 @@ namespace Spreadsheet_Emily_Porter
         {
             this.InitializeComponent();
             this.InitilizeDataGridView();
-            this.spreadsheetHW4 = new SpreadsheetEngine.Spreadsheet(50, 26); // initilize spreadsheet to correct size for hw4.
-            this.spreadsheetHW4.CellPropertyChanged += this.SpreadsheetPropertyChanged; // subscribe UI spreadsheet to spreadsheet.
+            this.spreadsheet = new SpreadsheetEngine.Spreadsheet(50, 26); // initilize spreadsheet to correct size for hw4.
+            this.spreadsheet.CellPropertyChanged += this.SpreadsheetPropertyChanged; // subscribe UI spreadsheet to spreadsheet.
         }
 
         /// <summary>
@@ -45,11 +45,6 @@ namespace Spreadsheet_Emily_Porter
             {
                 this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value = cell.Value; // update text in datagridview cell.
             }
-
-            if (cell != null && e.PropertyName == "Text") // this is not necassary
-            {
-                cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value; // update text in spreadsheet cell.
-            }
         }
 
         /// <summary>
@@ -63,10 +58,34 @@ namespace Spreadsheet_Emily_Porter
         /// </param>
         private void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            Cell cell = this.spreadsheetHW4.GetCell(e.RowIndex, e.ColumnIndex); // What is the cell we are going to update?
+            Cell cell = this.spreadsheet.GetCell(e.RowIndex, e.ColumnIndex); // What is the cell we are going to update?
             if (cell != null)
             {
-                cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value; // update text in spreadsheet cell.
+                cell.Text = (string)this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value; // update text in spreadsheet cell.
+                this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
+            }
+        }
+
+        /// <summary>
+        /// Used CellEndEdit becuase once finsihed editing datagridview cell, then update the actual spreadsheet cell.
+        /// </summary>
+        /// <param name="sender">
+        /// I am assuming that sender is the datagridview.
+        /// </param>
+        /// <param name="e">
+        /// the cell that has just been changed in the datagridview.
+        /// </param>
+        private void DataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            Cell cell = this.spreadsheet.GetCell(e.RowIndex, e.ColumnIndex); // What is the cell we are going to update?
+            if (cell != null)
+            {
+                // cell.Text = (string)this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].; // update text in spreadsheet cell.
+                this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Text;
+            }
+            else
+            {
+                this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = string.Empty;
             }
         }
 
@@ -96,22 +115,23 @@ namespace Spreadsheet_Emily_Porter
             {
                 int rowIndex = rand.Next(50);
                 int columnIndex = rand.Next(26);
-                Cell cell = this.spreadsheetHW4.GetCell(rowIndex, columnIndex);
+                Cell cell = this.spreadsheet.GetCell(rowIndex, columnIndex);
                 cell.Text = "potato";
             }
 
             // implement the B column text.
             for (int i = 0; i < 50; i++)
             {
-                Cell cell = this.spreadsheetHW4.GetCell(i, 1);
+                Cell cell = this.spreadsheet.GetCell(i, 1);
                 cell.Text = "This is cell B" + (i + 1);
             }
 
             // implement the A colomn text.
             for (int i = 0; i < 50; i++)
             {
-                string ha = "=B" + i;
-                Cell cell = this.spreadsheetHW4.GetCell(i, 0);
+                int h = i + 1;
+                string ha = "=B" + h;
+                Cell cell = this.spreadsheet.GetCell(i, 0);
                 cell.Text = ha;
             }
         }
