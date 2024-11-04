@@ -173,6 +173,15 @@ namespace SpreadsheetEngine
                             throw new IndexOutOfRangeException("Current cell is out of bounds.");
                         }
                     }
+
+                    if (tree.Evaluate() == double.NaN)
+                    {
+                        curCell.Value = "!ERROR!";
+                    }
+                    else
+                    {// set all variables, so now evaluate
+                        curCell.Value = tree.Evaluate().ToString();
+                    }
                 }
                 catch (IndexOutOfRangeException ex)
                 {
@@ -184,9 +193,6 @@ namespace SpreadsheetEngine
                     Console.WriteLine($"Unexpected error: {ex.Message}");
                     curCell.Value = "!ERROR!";
                 }
-
-                // set all variables, so now evaluate
-                curCell.Value = tree.Evaluate().ToString();
             }
             else
             {
@@ -260,12 +266,20 @@ namespace SpreadsheetEngine
 
             this.CellPropertyChanged?.Invoke(curCell, e); // raise notificaiton to subscribers that spreadsheet changed.
 
-            foreach (Cell cell in curCell.DependentCells)
+            try
             {
-                if (cell.Text[0] == '=')
+                foreach (Cell cell in curCell.DependentCells)
                 {
-                    this.Evaluate(cell);
+                    if (cell.Text[0] == '=')
+                    {
+                        this.Evaluate(cell);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: cell is either out of range or does not have value");
+                curCell.Value = "!ERROR!";
             }
         }
     }
