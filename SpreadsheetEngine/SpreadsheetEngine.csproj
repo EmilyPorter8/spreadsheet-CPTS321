@@ -44,6 +44,9 @@
     <Compile Include="AdditionOperatorNode.cs" />
     <Compile Include="BasicCell.cs" />
     <Compile Include="Cell.cs" />
+    <Compile Include="ColorCommand.cs" />
+    <Compile Include="EditInvoker.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="ConstantNode.cs" />
     <Compile Include="DivisionOperatorNode.cs" />
     <Compile Include="ExpressionTree.cs" />
@@ -55,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spreadsheet.cs" />
     <Compile Include="SubtractionOperatorNode.cs" />
+    <Compile Include="TextCommand.cs" />
     <Compile Include="VariableNode.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -254,7 +254,7 @@ namespace SpreadsheetEngine
             Cell curCell = sender as Cell; // caste sender as a cell.
             if (e.PropertyName == "Text")
             {
-                if (curCell.Text[0] == '=') // check if text needs to be evaluated.
+                if (curCell.Text != string.Empty && curCell.Text[0] == '=') // check if text needs to be evaluated.
                 {
                     this.Evaluate(curCell); // if text needs to be evaluated, call function.
                 }

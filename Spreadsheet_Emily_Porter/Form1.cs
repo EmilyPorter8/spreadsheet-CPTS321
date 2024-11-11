@@ -14,7 +14,14 @@ namespace Spreadsheet_Emily_Porter
     /// </summary>
     public partial class Form1 : Form
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private SpreadsheetEngine.Spreadsheet spreadsheet;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private SpreadsheetEngine.EditInvoker editInvoker;
 
         /// <summary>
@@ -28,6 +35,9 @@ namespace Spreadsheet_Emily_Porter
             this.spreadsheet = new SpreadsheetEngine.Spreadsheet(50, 26); // initilize spreadsheet to correct size for hw4.
             this.spreadsheet.CellPropertyChanged += this.SpreadsheetPropertyChanged; // subscribe UI spreadsheet to spreadsheet.
             this.editInvoker = new SpreadsheetEngine.EditInvoker();
+            this.redoToolStripMenuItem.Enabled = false;
+            this.undoToolStripMenuItem.Enabled = false;
+
         }
 
         /// <summary>
@@ -76,6 +86,7 @@ namespace Spreadsheet_Emily_Porter
                 string curText = cell.Text;
                 TextCommand newText = new TextCommand(cell, prevText, curText);
                 this.editInvoker.AddUndo(newText);
+                this.undoToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -170,6 +181,10 @@ namespace Spreadsheet_Emily_Porter
         private void ChangeBackgroundColourToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ColorDialog dialog = new ColorDialog();
+            Cell[] cells = new Cell[this.dataGridView1.SelectedCells.Count];
+            int index = 0;
+            uint prevColor = 0;
+            uint curColor = 0;
 
             if (dialog.ShowDialog() == DialogResult.OK) // get color.
             {
@@ -178,25 +193,52 @@ namespace Spreadsheet_Emily_Porter
                     Cell cell = this.spreadsheet.GetCell(curCell.RowIndex, curCell.ColumnIndex); // grab the cell we are changing
                     if (cell != null)
                     {
-                        uint prevColor = cell.BGColor;
+                        prevColor = cell.BGColor;
                         cell.BGColor = (uint)dialog.Color.ToArgb(); // update cell color.
-                        uint curColor = cell.BGColor;
-                        ColorCommand newColor = new ColorCommand(cell, prevColor, curColor);
-                        this.editInvoker.AddUndo(newColor);
+                        curColor = cell.BGColor;
+                        cells[index] = cell;
                     }
+
+                    ++index;
                 }
+
+                ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
+                this.editInvoker.AddUndo(newColor);
+                this.undoToolStripMenuItem.Enabled = true;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UndoButton_Click(object sender, EventArgs e)
         {
             this.editInvoker.UndoButtonPushed();
+            if (this.editInvoker.UndoNull())
+            {
+                this.undoToolStripMenuItem.Enabled = false;
+            }
+
+            this.redoToolStripMenuItem.Enabled = true;
+            this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RedoButton_Click(object sender, EventArgs e)
         {
             this.editInvoker.RedoButtonPushed();
-        }
+            if (this.editInvoker.RedoNull())
+            {
+                this.redoToolStripMenuItem.Enabled = false;
+            }
 
+            this.redoToolStripMenuItem.Text = "Redo " + this.editInvoker.PeekRedo().Description;
+        }
     }
 }

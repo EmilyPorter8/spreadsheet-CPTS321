@@ -16,23 +16,55 @@ namespace SpreadsheetEngine
     /// </summary>
     public class ColorCommand : ICommand
     {
-        private Cell cell;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Cell[] cells;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private uint prevColor;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private uint curColor;
 
-        public ColorCommand(Cell cell, uint prevColor, uint curColor)
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly string description;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="prevColor"></param>
+        /// <param name="curColor"></param>
+        public ColorCommand(Cell[] cell, uint prevColor, uint curColor)
         {
-            this.cell = cell;
+            this.cells = cell;
             this.prevColor = prevColor;
             this.curColor = curColor;
+            this.description = "changing cell background colour";
         }
+
+        /// <summary>
+        /// Gets description attribute.
+        /// </summary>
+        public string Description
+        { get => this.description; }
 
         /// <summary>
         /// 
         /// </summary>
         public void Execute()
         {
-            this.cell.BGColor = this.curColor;
+            foreach (var cell in this.cells)
+            {
+                cell.BGColor = this.curColor;
+            }
         }
 
         /// <summary>
@@ -40,7 +72,10 @@ namespace SpreadsheetEngine
         /// </summary>
         public void Unexecute()
         {
-            this.cell.BGColor = this.prevColor;
+            foreach (var cell in this.cells)
+            {
+                cell.BGColor = this.prevColor;
+            }
         }
     }
 }

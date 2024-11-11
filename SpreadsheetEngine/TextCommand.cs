@@ -16,16 +16,42 @@ namespace SpreadsheetEngine
     /// </summary>
     public class TextCommand : ICommand
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Cell cell;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private string prevText;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private string curText;
 
+        private string description;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="prevText"></param>
+        /// <param name="curText"></param>
         public TextCommand(Cell cell, string prevText, string curText)
         {
             this.cell = cell;
             this.prevText = prevText;
             this.curText = curText;
+            this.description = "changing cell text";
         }
+
+        /// <summary>
+        /// Gets description attribute.
+        /// </summary>
+        public string Description
+        { get => this.description; }
 
         /// <summary>
         /// 

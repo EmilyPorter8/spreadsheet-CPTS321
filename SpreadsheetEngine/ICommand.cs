@@ -25,5 +25,7 @@ namespace SpreadsheetEngine
         /// to be overwritten by other command classes. Will use this for undo.
         /// </summary>
         void Unexecute();
+
+        string Description { get; }
     }
 }

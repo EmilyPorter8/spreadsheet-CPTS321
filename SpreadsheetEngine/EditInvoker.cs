@@ -52,9 +52,12 @@ namespace SpreadsheetEngine
         /// </summary>
         public void UndoButtonPushed()
         {
-            ICommand undoCommand = this.undoCommands.Pop();
-            undoCommand.Unexecute();
-            this.AddRedo(undoCommand);
+            if (!this.UndoNull())
+            {
+                ICommand undoCommand = this.undoCommands.Pop();
+                undoCommand.Unexecute();
+                this.AddRedo(undoCommand);
+            }
         }
 
         /// <summary>
@@ -73,18 +76,64 @@ namespace SpreadsheetEngine
         /// </summary>
         public void RedoButtonPushed()
         {
-            ICommand redoCommand = this.redoCommands.Pop();
-            redoCommand.Execute();
-            this.AddRedo(redoCommand);
+            if (!this.RedoNull())
+            {
+                ICommand redoCommand = this.redoCommands.Pop();
+                redoCommand.Execute();
+                this.AddRedo(redoCommand);
+            }
         }
 
         /// <summary>
-        /// This should be called everytime redo button is pushed. This executes the top of the redoCommand stack.
+        /// Used to check if redo stack is empty or not.
         /// </summary>
-        public void RedoNull()
+        /// <returns>
+        /// returns whether redo stack is null.
+        /// </returns>
+        public bool RedoNull()
         {
-            if (redoCommands.Count == 0)
-            { }
+            if (this.redoCommands.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Used to check if undo stack is empty or not.
+        /// </summary>
+        /// <returns>
+        /// returns whether undo stack is null.
+        /// </returns>
+        public bool UndoNull()
+        {
+            if (this.undoCommands.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public ICommand PeekUndo()
+        {
+            if (!this.UndoNull())
+            {
+                return this.undoCommands.Peek();
+            }
+
+            return null;
+        }
+
+        public ICommand PeekRedo()
+        {
+            if (!this.RedoNull())
+            {
+                return this.redoCommands.Peek();
+            }
+
+            return null;
         }
     }
 }
