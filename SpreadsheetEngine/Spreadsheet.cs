@@ -276,7 +276,7 @@ namespace SpreadsheetEngine
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine($"Error: cell is either out of range or does not have value");
                 curCell.Value = "!ERROR!";

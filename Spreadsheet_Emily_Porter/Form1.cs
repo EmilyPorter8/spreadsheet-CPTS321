@@ -41,9 +41,16 @@ namespace Spreadsheet_Emily_Porter
         {
             Cell? cell = sender as Cell; // set cell to the cell that has just been changed.
 
-            if (cell != null && e.PropertyName == "Value") // check what property has changed.
+            if (cell != null) // check if null.
             {
-                this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value = cell.Value; // update text in datagridview cell.
+                if (e.PropertyName == "Value") // check what property has changed.
+                {
+                    this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value = cell.Value; // update text in datagridview cell.
+                }
+                else if (e.PropertyName == "BGColor")
+                {
+                    this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Style.BackColor = Color.FromArgb((int)cell.BGColor); // update color in datagridview cell.
+                }
             }
         }
 
@@ -107,6 +114,15 @@ namespace Spreadsheet_Emily_Porter
             }
         }
 
+        /// <summary>
+        /// demo button for hw 4.
+        /// </summary>
+        /// <param name="sender">
+        /// button.
+        /// </param>
+        /// <param name="e">
+        /// not used.
+        /// </param>
         private void Hw4demo_Click(object sender, EventArgs e)
         {
             // random text.
@@ -133,6 +149,32 @@ namespace Spreadsheet_Emily_Porter
                 string ha = "=B" + h;
                 Cell cell = this.spreadsheet.GetCell(i, 0);
                 cell.Text = ha;
+            }
+        }
+
+        /// <summary>
+        /// Upon click of menu item, change selected celll to chose colors in dialog.
+        /// </summary>
+        /// <param name="sender">
+        /// menu strip.
+        /// </param>
+        /// <param name="e">
+        /// e isnt really used in this function.
+        /// </param>
+        private void ChangeBackgroundColourToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dialog = new ColorDialog();
+
+            if (dialog.ShowDialog() == DialogResult.OK) // get color.
+            {
+                foreach (DataGridViewCell curCell in this.dataGridView1.SelectedCells) // in case we have selected more than one cell, iterate through all celected cells.
+                {
+                    Cell cell = this.spreadsheet.GetCell(curCell.RowIndex, curCell.ColumnIndex); // grab the cell we are changing
+                    if (cell != null)
+                    {
+                        cell.BGColor = (uint)dialog.Color.ToArgb(); // update cell color.
+                    }
+                }
             }
         }
     }

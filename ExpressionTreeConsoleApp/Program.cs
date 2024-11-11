@@ -12,7 +12,7 @@ namespace ExpressionTreeConsoleApp
     using System.Threading.Tasks;
 
     /// <summary>
-    /// HW 5 console app to demonstrate expresison tree functionality.
+    /// console app to demonstrate expresison tree functionality.
     /// </summary>
     internal class Program
     {

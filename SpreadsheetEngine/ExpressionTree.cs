@@ -18,7 +18,6 @@ namespace SpreadsheetEngine
 
     /// <summary>
     /// Class with entire expression tree.
-    /// For HW5, this just supports one operator at a time.
     /// </summary>
     public class ExpressionTree
     {
