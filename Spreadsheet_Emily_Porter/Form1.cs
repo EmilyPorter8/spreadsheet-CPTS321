@@ -15,6 +15,7 @@ namespace Spreadsheet_Emily_Porter
     public partial class Form1 : Form
     {
         private SpreadsheetEngine.Spreadsheet spreadsheet;
+        private SpreadsheetEngine.EditInvoker editInvoker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -26,6 +27,7 @@ namespace Spreadsheet_Emily_Porter
             this.InitilizeDataGridView();
             this.spreadsheet = new SpreadsheetEngine.Spreadsheet(50, 26); // initilize spreadsheet to correct size for hw4.
             this.spreadsheet.CellPropertyChanged += this.SpreadsheetPropertyChanged; // subscribe UI spreadsheet to spreadsheet.
+            this.editInvoker = new SpreadsheetEngine.EditInvoker();
         }
 
         /// <summary>
@@ -68,8 +70,12 @@ namespace Spreadsheet_Emily_Porter
             Cell cell = this.spreadsheet.GetCell(e.RowIndex, e.ColumnIndex); // What is the cell we are going to update?
             if (cell != null)
             {
+                string prevText = cell.Text;
                 cell.Text = (string)this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value; // update text in spreadsheet cell.
                 this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
+                string curText = cell.Text;
+                TextCommand newText = new TextCommand(cell, prevText, curText);
+                this.editInvoker.AddUndo(newText);
             }
         }
 
@@ -172,10 +178,25 @@ namespace Spreadsheet_Emily_Porter
                     Cell cell = this.spreadsheet.GetCell(curCell.RowIndex, curCell.ColumnIndex); // grab the cell we are changing
                     if (cell != null)
                     {
+                        uint prevColor = cell.BGColor;
                         cell.BGColor = (uint)dialog.Color.ToArgb(); // update cell color.
+                        uint curColor = cell.BGColor;
+                        ColorCommand newColor = new ColorCommand(cell, prevColor, curColor);
+                        this.editInvoker.AddUndo(newColor);
                     }
                 }
             }
         }
+
+        private void UndoButton_Click(object sender, EventArgs e)
+        {
+            this.editInvoker.UndoButtonPushed();
+        }
+
+        private void RedoButton_Click(object sender, EventArgs e)
+        {
+            this.editInvoker.RedoButtonPushed();
+        }
+
     }
 }

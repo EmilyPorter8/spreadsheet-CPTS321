@@ -37,6 +37,8 @@ namespace Spreadsheet_Emily_Porter
             cellToolStripMenuItem = new ToolStripMenuItem();
             changeBackgroundColourToolStripMenuItem = new ToolStripMenuItem();
             colorDialog1 = new ColorDialog();
+            undoToolStripMenuItem = new ToolStripMenuItem();
+            redoToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -84,9 +86,14 @@ namespace Spreadsheet_Emily_Porter
             // 
             // editToolStripMenuItem
             // 
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { undoToolStripMenuItem, redoToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(49, 24);
             editToolStripMenuItem.Text = "Edit";
+            undoToolStripMenuItem.Click += UndoButton_Click;
+            redoToolStripMenuItem.Click += RedoButton_Click;
+
+
             // 
             // cellToolStripMenuItem
             // 
@@ -101,6 +108,18 @@ namespace Spreadsheet_Emily_Porter
             changeBackgroundColourToolStripMenuItem.Size = new Size(273, 26);
             changeBackgroundColourToolStripMenuItem.Text = "Change Background Colour";
             changeBackgroundColourToolStripMenuItem.Click += ChangeBackgroundColourToolStripMenuItem_Click;
+            // 
+            // undoToolStripMenuItem
+            // 
+            undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            undoToolStripMenuItem.Size = new Size(224, 26);
+            undoToolStripMenuItem.Text = "Undo";
+            // 
+            // redoToolStripMenuItem
+            // 
+            redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            redoToolStripMenuItem.Size = new Size(224, 26);
+            redoToolStripMenuItem.Text = "Redo";
             // 
             // Form1
             // 
@@ -130,5 +149,7 @@ namespace Spreadsheet_Emily_Porter
         private ToolStripMenuItem cellToolStripMenuItem;
         private ToolStripMenuItem changeBackgroundColourToolStripMenuItem;
         private ColorDialog colorDialog1;
+        private ToolStripMenuItem undoToolStripMenuItem;
+        private ToolStripMenuItem redoToolStripMenuItem;
     }
 }
