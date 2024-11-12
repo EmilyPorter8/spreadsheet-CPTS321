@@ -64,7 +64,7 @@ namespace SpreadsheetEngine
         /// add command once undo button is clicked.
         /// </summary>
         /// <param name="newCommand">
-        /// the command that was just undone
+        /// the command that was just undone.
         /// </param>
         public void AddRedo(ICommand newCommand)
         {
@@ -80,7 +80,7 @@ namespace SpreadsheetEngine
             {
                 ICommand redoCommand = this.redoCommands.Pop();
                 redoCommand.Execute();
-                this.AddRedo(redoCommand);
+                this.AddUndo(redoCommand);
             }
         }
 
@@ -116,6 +116,12 @@ namespace SpreadsheetEngine
             return false;
         }
 
+        /// <summary>
+        /// peek the top of the undo stack, used for button text.
+        /// </summary>
+        /// <returns>
+        /// command at the top of the stack.
+        /// </returns>
         public ICommand PeekUndo()
         {
             if (!this.UndoNull())
@@ -126,6 +132,12 @@ namespace SpreadsheetEngine
             return null;
         }
 
+        /// <summary>
+        /// peek the top of the redo stack, used for button text.
+        /// </summary>
+        /// <returns>
+        /// command at the top of the stack.
+        /// </returns>
         public ICommand PeekRedo()
         {
             if (!this.RedoNull())

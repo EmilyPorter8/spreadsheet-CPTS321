@@ -17,28 +17,37 @@ namespace SpreadsheetEngine
     public class TextCommand : ICommand
     {
         /// <summary>
-        /// 
+        /// button text description.
+        /// </summary>
+        private readonly string description;
+
+        /// <summary>
+        /// cell whoes text was changed.
         /// </summary>
         private Cell cell;
 
         /// <summary>
-        /// 
+        /// the previous text of the cell.
         /// </summary>
         private string prevText;
 
         /// <summary>
-        /// 
+        /// the current text of the cell.
         /// </summary>
         private string curText;
 
-        private string description;
-
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="TextCommand"/> class.
         /// </summary>
-        /// <param name="cell"></param>
-        /// <param name="prevText"></param>
-        /// <param name="curText"></param>
+        /// <param name="cell">
+        /// cell that is being updated.
+        /// </param>
+        /// <param name="prevText">
+        /// what the text was before we changed it.
+        /// </param>
+        /// <param name="curText">
+        /// the current text of the cell.
+        /// </param>
         public TextCommand(Cell cell, string prevText, string curText)
         {
             this.cell = cell;
@@ -54,7 +63,7 @@ namespace SpreadsheetEngine
         { get => this.description; }
 
         /// <summary>
-        /// 
+        /// when we redo, set text back to cur text.
         /// </summary>
         public void Execute()
         {
@@ -62,13 +71,11 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
-        /// 
+        /// when we undo, set text to prev text.
         /// </summary>
         public void Unexecute()
         {
             this.cell.Text = this.prevText;
-
         }
     }
 }
-

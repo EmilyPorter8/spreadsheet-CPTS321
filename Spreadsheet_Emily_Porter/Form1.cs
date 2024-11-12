@@ -15,12 +15,12 @@ namespace Spreadsheet_Emily_Porter
     public partial class Form1 : Form
     {
         /// <summary>
-        /// 
+        /// the whole spreadsheet from the spreadsheet engine.
         /// </summary>
         private SpreadsheetEngine.Spreadsheet spreadsheet;
 
         /// <summary>
-        /// 
+        /// the undo/redo stacks and logic behind undo/redo.
         /// </summary>
         private SpreadsheetEngine.EditInvoker editInvoker;
 
@@ -37,7 +37,6 @@ namespace Spreadsheet_Emily_Porter
             this.editInvoker = new SpreadsheetEngine.EditInvoker();
             this.redoToolStripMenuItem.Enabled = false;
             this.undoToolStripMenuItem.Enabled = false;
-
         }
 
         /// <summary>
@@ -84,9 +83,14 @@ namespace Spreadsheet_Emily_Porter
                 cell.Text = (string)this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value; // update text in spreadsheet cell.
                 this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
                 string curText = cell.Text;
-                TextCommand newText = new TextCommand(cell, prevText, curText);
-                this.editInvoker.AddUndo(newText);
-                this.undoToolStripMenuItem.Enabled = true;
+                if (prevText != curText)
+                {
+                    TextCommand newText = new TextCommand(cell, prevText, curText);
+                    this.editInvoker.AddUndo(newText);
+                    this.undoToolStripMenuItem.Enabled = true;
+                    this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
+                }
+
             }
         }
 
@@ -183,8 +187,8 @@ namespace Spreadsheet_Emily_Porter
             ColorDialog dialog = new ColorDialog();
             Cell[] cells = new Cell[this.dataGridView1.SelectedCells.Count];
             int index = 0;
-            uint prevColor = 0;
-            uint curColor = 0;
+            uint[] prevColor = new uint[this.dataGridView1.SelectedCells.Count];
+            uint[] curColor = new uint[this.dataGridView1.SelectedCells.Count];
 
             if (dialog.ShowDialog() == DialogResult.OK) // get color.
             {
@@ -193,9 +197,9 @@ namespace Spreadsheet_Emily_Porter
                     Cell cell = this.spreadsheet.GetCell(curCell.RowIndex, curCell.ColumnIndex); // grab the cell we are changing
                     if (cell != null)
                     {
-                        prevColor = cell.BGColor;
+                        prevColor[index] = cell.BGColor;
                         cell.BGColor = (uint)dialog.Color.ToArgb(); // update cell color.
-                        curColor = cell.BGColor;
+                        curColor[index] = cell.BGColor;
                         cells[index] = cell;
                     }
 
@@ -204,6 +208,7 @@ namespace Spreadsheet_Emily_Porter
 
                 ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
                 this.editInvoker.AddUndo(newColor);
+                this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
                 this.undoToolStripMenuItem.Enabled = true;
             }
         }
@@ -219,10 +224,15 @@ namespace Spreadsheet_Emily_Porter
             if (this.editInvoker.UndoNull())
             {
                 this.undoToolStripMenuItem.Enabled = false;
+                this.undoToolStripMenuItem.Text = "Undo";
+            }
+            else
+            {
+                this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
             }
 
             this.redoToolStripMenuItem.Enabled = true;
-            this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
+            this.redoToolStripMenuItem.Text = "Redo " + this.editInvoker.PeekRedo().Description;
         }
 
         /// <summary>
@@ -235,10 +245,13 @@ namespace Spreadsheet_Emily_Porter
             this.editInvoker.RedoButtonPushed();
             if (this.editInvoker.RedoNull())
             {
+                this.redoToolStripMenuItem.Text = "Redo";
                 this.redoToolStripMenuItem.Enabled = false;
             }
-
-            this.redoToolStripMenuItem.Text = "Redo " + this.editInvoker.PeekRedo().Description;
+            else
+            {
+                this.redoToolStripMenuItem.Text = "Redo " + this.editInvoker.PeekRedo().Description;
+            }
         }
     }
 }

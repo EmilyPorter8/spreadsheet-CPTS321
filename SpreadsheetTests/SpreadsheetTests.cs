@@ -235,8 +235,10 @@ namespace SpreadsheetTests
             SpreadsheetEngine.BasicCell cell = new SpreadsheetEngine.BasicCell(0, 0);
             Cell[] cells = new Cell[1];
             cells[0] = cell;
-            uint prevColor = 0;
-            uint curColor = 5;
+            uint[] prevColor = new uint[1];
+            prevColor[0] = 0;
+            uint[] curColor = new uint[1];
+            curColor[0] = 5;
             ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
             testEditInvoker.AddUndo(newColor);
             Assert.That(testEditInvoker.PeekUndo().Description, Is.EqualTo("changing cell background colour"));
@@ -252,12 +254,14 @@ namespace SpreadsheetTests
             SpreadsheetEngine.BasicCell cell = new SpreadsheetEngine.BasicCell(0, 0);
             Cell[] cells = new Cell[1];
             cells[0] = cell;
-            uint prevColor = 0;
-            uint curColor = 5;
+            uint[] prevColor = new uint[1];
+            prevColor[0] = 0;
+            uint[] curColor = new uint[1];
+            curColor[0] = 5;
             ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
             testEditInvoker.AddUndo(newColor);
             testEditInvoker.UndoButtonPushed();
-            Assert.That(testEditInvoker.PeekUndo().Description, Is.EqualTo(null));
+            Assert.That(testEditInvoker.PeekUndo(), Is.EqualTo(null));
         }
 
         /// <summary>
@@ -270,13 +274,15 @@ namespace SpreadsheetTests
             SpreadsheetEngine.BasicCell cell = new SpreadsheetEngine.BasicCell(0, 0);
             Cell[] cells = new Cell[1];
             cells[0] = cell;
-            uint prevColor = 0;
-            uint curColor = 5;
+            uint[] prevColor = new uint[1];
+            prevColor[0] = 0;
+            uint[] curColor = new uint[1];
+            curColor[0] = 5;
             ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
             testEditInvoker.AddUndo(newColor);
             testEditInvoker.UndoButtonPushed();
             testEditInvoker.UndoButtonPushed();
-            Assert.That(testEditInvoker.PeekUndo().Description, Is.EqualTo(null));
+            Assert.That(testEditInvoker.PeekUndo(), Is.EqualTo(null));
         }
 
         /// <summary>
@@ -287,7 +293,7 @@ namespace SpreadsheetTests
         {
             SpreadsheetEngine.EditInvoker testEditInvoker = new SpreadsheetEngine.EditInvoker();
             testEditInvoker.RedoButtonPushed();
-            Assert.That(testEditInvoker.PeekRedo().Description, Is.EqualTo(null));
+            Assert.That(testEditInvoker.PeekRedo(), Is.EqualTo(null));
         }
     }
 }

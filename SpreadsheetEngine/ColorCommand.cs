@@ -17,32 +17,38 @@ namespace SpreadsheetEngine
     public class ColorCommand : ICommand
     {
         /// <summary>
-        /// 
-        /// </summary>
-        private Cell[] cells;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private uint prevColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private uint curColor;
-
-        /// <summary>
-        /// 
+        /// button text description.
         /// </summary>
         private readonly string description;
 
         /// <summary>
-        /// 
+        /// cells whoes color was changed.
         /// </summary>
-        /// <param name="cell"></param>
-        /// <param name="prevColor"></param>
-        /// <param name="curColor"></param>
-        public ColorCommand(Cell[] cell, uint prevColor, uint curColor)
+        private Cell[] cells;
+
+        /// <summary>
+        /// the previous color of the cell.
+        /// </summary>
+        private uint[] prevColor;
+
+        /// <summary>
+        /// the current color of the cell.
+        /// </summary>
+        private uint[] curColor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorCommand"/> class.
+        /// </summary>
+        /// <param name="cell">
+        /// cell that is being updated.
+        /// </param>
+        /// <param name="prevColor">
+        /// what the color was before we changed it.
+        /// </param>
+        /// <param name="curColor">
+        /// the current color of the cell.
+        /// </param>
+        public ColorCommand(Cell[] cell, uint[] prevColor, uint[] curColor)
         {
             this.cells = cell;
             this.prevColor = prevColor;
@@ -57,24 +63,28 @@ namespace SpreadsheetEngine
         { get => this.description; }
 
         /// <summary>
-        /// 
+        /// when we redo, set color back to cur color for each cell.
         /// </summary>
         public void Execute()
         {
+            int index = 0;
             foreach (var cell in this.cells)
             {
-                cell.BGColor = this.curColor;
+                cell.BGColor = this.curColor[index];
+                index++;
             }
         }
 
         /// <summary>
-        /// 
+        /// when we undo, set color to prev color for each cell.
         /// </summary>
         public void Unexecute()
         {
+            int index = 0;
             foreach (var cell in this.cells)
             {
-                cell.BGColor = this.prevColor;
+                cell.BGColor = this.prevColor[index];
+                index++;
             }
         }
     }
