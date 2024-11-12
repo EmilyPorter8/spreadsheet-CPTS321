@@ -14,7 +14,15 @@ namespace Spreadsheet_Emily_Porter
     /// </summary>
     public partial class Form1 : Form
     {
+        /// <summary>
+        /// the whole spreadsheet from the spreadsheet engine.
+        /// </summary>
         private SpreadsheetEngine.Spreadsheet spreadsheet;
+
+        /// <summary>
+        /// the undo/redo stacks and logic behind undo/redo.
+        /// </summary>
+        private SpreadsheetEngine.EditInvoker editInvoker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -26,6 +34,9 @@ namespace Spreadsheet_Emily_Porter
             this.InitilizeDataGridView();
             this.spreadsheet = new SpreadsheetEngine.Spreadsheet(50, 26); // initilize spreadsheet to correct size for hw4.
             this.spreadsheet.CellPropertyChanged += this.SpreadsheetPropertyChanged; // subscribe UI spreadsheet to spreadsheet.
+            this.editInvoker = new SpreadsheetEngine.EditInvoker();
+            this.redoToolStripMenuItem.Enabled = false;
+            this.undoToolStripMenuItem.Enabled = false;
         }
 
         /// <summary>
@@ -41,9 +52,16 @@ namespace Spreadsheet_Emily_Porter
         {
             Cell? cell = sender as Cell; // set cell to the cell that has just been changed.
 
-            if (cell != null && e.PropertyName == "Value") // check what property has changed.
+            if (cell != null) // check if null.
             {
-                this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value = cell.Value; // update text in datagridview cell.
+                if (e.PropertyName == "Value") // check what property has changed.
+                {
+                    this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Value = cell.Value; // update text in datagridview cell.
+                }
+                else if (e.PropertyName == "BGColor")
+                {
+                    this.dataGridView1.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Style.BackColor = Color.FromArgb((int)cell.BGColor); // update color in datagridview cell.
+                }
             }
         }
 
@@ -61,8 +79,18 @@ namespace Spreadsheet_Emily_Porter
             Cell cell = this.spreadsheet.GetCell(e.RowIndex, e.ColumnIndex); // What is the cell we are going to update?
             if (cell != null)
             {
+                string prevText = cell.Text;
                 cell.Text = (string)this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value; // update text in spreadsheet cell.
                 this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = cell.Value;
+                string curText = cell.Text;
+                if (prevText != curText)
+                {
+                    TextCommand newText = new TextCommand(cell, prevText, curText);
+                    this.editInvoker.AddUndo(newText);
+                    this.undoToolStripMenuItem.Enabled = true;
+                    this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
+                }
+
             }
         }
 
@@ -107,6 +135,15 @@ namespace Spreadsheet_Emily_Porter
             }
         }
 
+        /// <summary>
+        /// demo button for hw 4.
+        /// </summary>
+        /// <param name="sender">
+        /// button.
+        /// </param>
+        /// <param name="e">
+        /// not used.
+        /// </param>
         private void Hw4demo_Click(object sender, EventArgs e)
         {
             // random text.
@@ -133,6 +170,87 @@ namespace Spreadsheet_Emily_Porter
                 string ha = "=B" + h;
                 Cell cell = this.spreadsheet.GetCell(i, 0);
                 cell.Text = ha;
+            }
+        }
+
+        /// <summary>
+        /// Upon click of menu item, change selected celll to chose colors in dialog.
+        /// </summary>
+        /// <param name="sender">
+        /// menu strip.
+        /// </param>
+        /// <param name="e">
+        /// e isnt really used in this function.
+        /// </param>
+        private void ChangeBackgroundColourToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorDialog dialog = new ColorDialog();
+            Cell[] cells = new Cell[this.dataGridView1.SelectedCells.Count];
+            int index = 0;
+            uint[] prevColor = new uint[this.dataGridView1.SelectedCells.Count];
+            uint[] curColor = new uint[this.dataGridView1.SelectedCells.Count];
+
+            if (dialog.ShowDialog() == DialogResult.OK) // get color.
+            {
+                foreach (DataGridViewCell curCell in this.dataGridView1.SelectedCells) // in case we have selected more than one cell, iterate through all celected cells.
+                {
+                    Cell cell = this.spreadsheet.GetCell(curCell.RowIndex, curCell.ColumnIndex); // grab the cell we are changing
+                    if (cell != null)
+                    {
+                        prevColor[index] = cell.BGColor;
+                        cell.BGColor = (uint)dialog.Color.ToArgb(); // update cell color.
+                        curColor[index] = cell.BGColor;
+                        cells[index] = cell;
+                    }
+
+                    ++index;
+                }
+
+                ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
+                this.editInvoker.AddUndo(newColor);
+                this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
+                this.undoToolStripMenuItem.Enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UndoButton_Click(object sender, EventArgs e)
+        {
+            this.editInvoker.UndoButtonPushed();
+            if (this.editInvoker.UndoNull())
+            {
+                this.undoToolStripMenuItem.Enabled = false;
+                this.undoToolStripMenuItem.Text = "Undo";
+            }
+            else
+            {
+                this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
+            }
+
+            this.redoToolStripMenuItem.Enabled = true;
+            this.redoToolStripMenuItem.Text = "Redo " + this.editInvoker.PeekRedo().Description;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RedoButton_Click(object sender, EventArgs e)
+        {
+            this.editInvoker.RedoButtonPushed();
+            if (this.editInvoker.RedoNull())
+            {
+                this.redoToolStripMenuItem.Text = "Redo";
+                this.redoToolStripMenuItem.Enabled = false;
+            }
+            else
+            {
+                this.redoToolStripMenuItem.Text = "Redo " + this.editInvoker.PeekRedo().Description;
             }
         }
     }

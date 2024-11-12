@@ -13,6 +13,7 @@ namespace SpreadsheetTests
     using System.Text;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using SpreadsheetEngine;
 
     /// <summary>
     /// Test for Spreadsheet class, which is a 2d array of BasicCell.
@@ -222,6 +223,77 @@ namespace SpreadsheetTests
             this.testNormal.GetSpreadsheet()[1, 0].Text = "5";
             this.testNormal.GetSpreadsheet()[0, 2].Text = "=A1+A2";
             Assert.That(this.testNormal.GetCell(0, 2).Value, Is.EqualTo("8"));
+        }
+
+        /// <summary>
+        /// test to see if the spreadsheet will update cell undo and redo.
+        /// </summary>
+        [Test]
+        public void UndoNormalTest()
+        {
+            SpreadsheetEngine.EditInvoker testEditInvoker = new SpreadsheetEngine.EditInvoker();
+            SpreadsheetEngine.BasicCell cell = new SpreadsheetEngine.BasicCell(0, 0);
+            Cell[] cells = new Cell[1];
+            cells[0] = cell;
+            uint[] prevColor = new uint[1];
+            prevColor[0] = 0;
+            uint[] curColor = new uint[1];
+            curColor[0] = 5;
+            ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
+            testEditInvoker.AddUndo(newColor);
+            Assert.That(testEditInvoker.PeekUndo().Description, Is.EqualTo("changing cell background colour"));
+        }
+
+        /// <summary>
+        /// test to see if the spreadsheet will update cell undo and redo.
+        /// </summary>
+        [Test]
+        public void UndoNormalTest2()
+        {
+            SpreadsheetEngine.EditInvoker testEditInvoker = new SpreadsheetEngine.EditInvoker();
+            SpreadsheetEngine.BasicCell cell = new SpreadsheetEngine.BasicCell(0, 0);
+            Cell[] cells = new Cell[1];
+            cells[0] = cell;
+            uint[] prevColor = new uint[1];
+            prevColor[0] = 0;
+            uint[] curColor = new uint[1];
+            curColor[0] = 5;
+            ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
+            testEditInvoker.AddUndo(newColor);
+            testEditInvoker.UndoButtonPushed();
+            Assert.That(testEditInvoker.PeekUndo(), Is.EqualTo(null));
+        }
+
+        /// <summary>
+        /// test to see if the spreadsheet will update cell undo and redo.
+        /// </summary>
+        [Test]
+        public void UndoBoandaryTest()
+        {
+            SpreadsheetEngine.EditInvoker testEditInvoker = new SpreadsheetEngine.EditInvoker();
+            SpreadsheetEngine.BasicCell cell = new SpreadsheetEngine.BasicCell(0, 0);
+            Cell[] cells = new Cell[1];
+            cells[0] = cell;
+            uint[] prevColor = new uint[1];
+            prevColor[0] = 0;
+            uint[] curColor = new uint[1];
+            curColor[0] = 5;
+            ColorCommand newColor = new ColorCommand(cells, prevColor, curColor);
+            testEditInvoker.AddUndo(newColor);
+            testEditInvoker.UndoButtonPushed();
+            testEditInvoker.UndoButtonPushed();
+            Assert.That(testEditInvoker.PeekUndo(), Is.EqualTo(null));
+        }
+
+        /// <summary>
+        /// test to see if the spreadsheet will update cell redo.
+        /// </summary>
+        [Test]
+        public void RedoExceptionalTest()
+        {
+            SpreadsheetEngine.EditInvoker testEditInvoker = new SpreadsheetEngine.EditInvoker();
+            testEditInvoker.RedoButtonPushed();
+            Assert.That(testEditInvoker.PeekRedo(), Is.EqualTo(null));
         }
     }
 }

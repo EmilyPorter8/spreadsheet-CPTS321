@@ -39,6 +39,11 @@ namespace SpreadsheetEngine
         private string value;
 
         /// <summary>
+        /// color attricute that we use to keep track of the color of the cell.
+        /// </summary>
+        private uint bgColor;
+
+        /// <summary>
         /// List of cells that the current cell is dependent on.
         /// </summary>
         private List<Cell> dependentCells;
@@ -60,6 +65,7 @@ namespace SpreadsheetEngine
             this.text = string.Empty;
             this.value = string.Empty;
             this.dependentCells = new List<Cell> { };
+            this.bgColor = 0xFFFFFFFF;
         }
 
         /// <summary>
@@ -76,6 +82,14 @@ namespace SpreadsheetEngine
         /// Gets the readonly column. Initilize property.
         /// </summary>
         public int ColumnIndex { get => this.columnindex; } // column index for where cell is located.
+
+        /// <summary>
+        /// Gets the dependentcells list.
+        /// </summary>
+        public List<Cell> DependentCells
+        {
+            get => this.dependentCells;
+        }
 
         /// <summary>
         /// Gets the value attribute. Set can now be defined as internal in the BaseCell class.
@@ -99,11 +113,24 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
-        /// Gets the dependentcells list.
+        /// Gets or sets BGColor property.
         /// </summary>
-        public List<Cell> DependentCells
+        public uint BGColor
         {
-            get => this.dependentCells;
+            get => this.bgColor;
+            set
+            {
+                if (this.bgColor == value)
+                {
+                    // ignore it.
+                }
+                else
+                {
+                    // color is actually being changed.
+                    this.bgColor = value;
+                    this.OnPropertyChanged("BGColor");
+                }
+            }
         }
 
         /// <summary>
