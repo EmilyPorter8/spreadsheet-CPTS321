@@ -164,7 +164,8 @@ namespace SpreadsheetEngine
                         // curToken should be null if parentheses.
                         if (i == '(')
                         {
-                            if (curToken != string.Empty) // this is multiplication. for 3(1+2) type expressions.
+                            // this is multiplication. for 3(1+2) type expressions.
+                            if (curToken != string.Empty)
                             {
                                 operatorNodes.Push('*');
                                 curNode = this.CreateOperandNode(curToken);

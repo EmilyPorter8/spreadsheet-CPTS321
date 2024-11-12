@@ -90,7 +90,6 @@ namespace Spreadsheet_Emily_Porter
                     this.undoToolStripMenuItem.Enabled = true;
                     this.undoToolStripMenuItem.Text = "Undo " + this.editInvoker.PeekUndo().Description;
                 }
-
             }
         }
 
@@ -214,10 +213,14 @@ namespace Spreadsheet_Emily_Porter
         }
 
         /// <summary>
-        /// 
+        /// undo button clicked, call undo button functiona and undo button text.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">
+        /// the button.
+        /// </param>
+        /// <param name="e">
+        /// not used.
+        /// </param>
         private void UndoButton_Click(object sender, EventArgs e)
         {
             this.editInvoker.UndoButtonPushed();
@@ -236,10 +239,14 @@ namespace Spreadsheet_Emily_Porter
         }
 
         /// <summary>
-        /// 
+        /// redo button clicked, call redo button functiona and redo button text.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">
+        /// the button.
+        /// </param>
+        /// <param name="e">
+        /// not used.
+        /// </param>
         private void RedoButton_Click(object sender, EventArgs e)
         {
             this.editInvoker.RedoButtonPushed();

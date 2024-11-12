@@ -12,10 +12,15 @@ namespace SpreadsheetEngine
     using System.Threading.Tasks;
 
     /// <summary>
-    /// general command interface, TODO
+    /// general command interface.
     /// </summary>
     public interface ICommand
     {
+        /// <summary>
+        /// Gets Description field.
+        /// </summary>
+        string Description { get; }
+
         /// <summary>
         /// to be overwritten by other command classes. Will use this for redo.
         /// </summary>
@@ -25,7 +30,5 @@ namespace SpreadsheetEngine
         /// to be overwritten by other command classes. Will use this for undo.
         /// </summary>
         void Unexecute();
-
-        string Description { get; }
     }
 }
