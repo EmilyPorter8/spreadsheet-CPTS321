@@ -165,9 +165,11 @@ namespace SpreadsheetEngine
         /// </param>
         public void AddDependency(Cell dependentCell)
         {
-            if (!this.dependentCells.Contains(dependentCell)) // does it already exist?
+            // does it already exist?
+            if (!this.dependentCells.Contains(dependentCell))
             {
-                this.dependentCells.Add(dependentCell); // add to list.
+                // add to list.
+                this.dependentCells.Add(dependentCell);
                 dependentCell.PropertyChanged += this.PropertyChanged; // subscribe.
             }
         }
