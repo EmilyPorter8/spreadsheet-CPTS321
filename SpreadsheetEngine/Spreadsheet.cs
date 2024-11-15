@@ -156,7 +156,7 @@ namespace SpreadsheetEngine
         {
             // need to remove all events?.
             // need to reinitilize spreadsheet
-            this.InitializeSpreadsheet();
+            this.ResetSpreadsheet();
             int rowIndex = 0;
             int colIndex = 0;
             Cell curCell = null;
@@ -329,6 +329,24 @@ namespace SpreadsheetEngine
         internal Cell[,] GetSpreadsheet()
         {
             return this.spreadsheet;
+        }
+
+        /// <summary>
+        /// Reset spreadsheet to default, then create new cells.
+        /// </summary>
+        private void ResetSpreadsheet()
+        {
+            for (int rowIndex = 0; rowIndex < this.rowCount; rowIndex++)
+            {
+                for (int columnIndex = 0; columnIndex < this.columnCount; columnIndex++)
+                {
+                    // rowIndex and columnIndex will start at 0, while rowSize and columnSize will start at 1.
+                    this.spreadsheet[rowIndex, columnIndex].Text = string.Empty; // reset the old stuff.
+                    this.spreadsheet[rowIndex, columnIndex].BGColor = 0xFFFFFFFF;
+                    this.spreadsheet[rowIndex, columnIndex] = new BasicCell(rowIndex, columnIndex);
+                    this.spreadsheet[rowIndex, columnIndex].PropertyChanged += this.SpreadsheetPropertyChanged; // subscribe spreadsheet to cell's properties.
+                }
+            }
         }
 
         /// <summary>
