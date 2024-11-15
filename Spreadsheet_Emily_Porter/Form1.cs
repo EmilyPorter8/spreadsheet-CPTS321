@@ -6,6 +6,7 @@
 namespace Spreadsheet_Emily_Porter
 {
     using System.ComponentModel;
+    using System.DirectoryServices;
     using System.Security.Cryptography;
     using System.Windows.Forms;
     using System.Xml;
@@ -299,6 +300,7 @@ namespace Spreadsheet_Emily_Porter
             {
                 string path = this.openFileDialog1.FileName;
                 this.spreadsheet.Load(path);
+                this.editInvoker = new SpreadsheetEngine.EditInvoker(); // reset undo/redo.
             }
         }
     }
