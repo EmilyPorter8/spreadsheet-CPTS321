@@ -7,6 +7,7 @@ namespace SpreadsheetTests
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -25,6 +26,7 @@ namespace SpreadsheetTests
         private SpreadsheetEngine.Spreadsheet testNormal;
         private SpreadsheetEngine.Spreadsheet testBoundary;
         private SpreadsheetEngine.Spreadsheet testExceptional;
+        private SpreadsheetEngine.Spreadsheet testActual; // actual size of spreadsheet used in this application.
 
         /// <summary>
         /// Constructing a test Spreadsheet.
@@ -35,6 +37,7 @@ namespace SpreadsheetTests
             this.testNormal = new SpreadsheetEngine.Spreadsheet(5, 3);
             this.testBoundary = new SpreadsheetEngine.Spreadsheet(0, 0);
             this.testExceptional = new SpreadsheetEngine.Spreadsheet(-5, -30);
+            this.testActual = new SpreadsheetEngine.Spreadsheet(50, 26);
         }
 
         /// <summary>
@@ -294,6 +297,32 @@ namespace SpreadsheetTests
             SpreadsheetEngine.EditInvoker testEditInvoker = new SpreadsheetEngine.EditInvoker();
             testEditInvoker.RedoButtonPushed();
             Assert.That(testEditInvoker.PeekRedo(), Is.EqualTo(null));
+        }
+
+        /// <summary>
+        /// test load normal.
+        /// </summary>
+        [Test]
+        public void NormalLoadTest()
+        {
+            this.testActual.Load("C:\\Users\\emily\\OneDrive\\Documents\\CPTS 321\\cpts321-emily-porter-hws\\SpreadsheetTests\\testLoad.xml");
+            Assert.That(this.testActual.GetCell(0, 0).Text, Is.EqualTo("5"));
+            Assert.That(this.testActual.GetCell(0, 0).BGColor, Is.EqualTo(4294934656));
+            Assert.That(this.testActual.GetCell(2, 0).Text, Is.EqualTo("=A1+A2"));
+            Assert.That(this.testActual.GetCell(2, 0).Value, Is.EqualTo("13"));
+        }
+
+        /// <summary>
+        /// test load boundary, with file that has some extra elements.
+        /// </summary>
+        [Test]
+        public void BoundaryLoadTest()
+        {
+            this.testActual.Load("C:\\Users\\emily\\OneDrive\\Documents\\CPTS 321\\cpts321-emily-porter-hws\\SpreadsheetTests\\testLoadBoundary.xml");
+            Assert.That(this.testActual.GetCell(0, 0).Text, Is.EqualTo("5"));
+            Assert.That(this.testActual.GetCell(0, 0).BGColor, Is.EqualTo(4294934656));
+            Assert.That(this.testActual.GetCell(2, 0).Text, Is.EqualTo("=A1+A2"));
+            Assert.That(this.testActual.GetCell(2, 0).Value, Is.EqualTo("13"));
         }
     }
 }

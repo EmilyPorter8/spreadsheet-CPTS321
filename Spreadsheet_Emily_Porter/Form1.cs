@@ -6,7 +6,10 @@
 namespace Spreadsheet_Emily_Porter
 {
     using System.ComponentModel;
+    using System.DirectoryServices;
+    using System.Security.Cryptography;
     using System.Windows.Forms;
+    using System.Xml;
     using SpreadsheetEngine;
 
     /// <summary>
@@ -258,6 +261,46 @@ namespace Spreadsheet_Emily_Porter
             else
             {
                 this.redoToolStripMenuItem.Text = "Redo " + this.editInvoker.PeekRedo().Description;
+            }
+        }
+
+        /// <summary>
+        /// When the save button is pressed, open file dialog and call save function.
+        /// </summary>
+        /// <param name="sender">
+        /// the button.
+        /// </param>
+        /// <param name="e">
+        /// unused.
+        /// </param>
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.saveFileDialog1.Filter = "XML Files (*.xml)|*.xml"; // only save as xml.
+
+            if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string path = this.saveFileDialog1.FileName;
+                this.spreadsheet.Save(path);
+            }
+        }
+
+        /// <summary>
+        /// When the load button is pressed, open file dialog and call load function to update spreadsheet.
+        /// </summary>
+        /// <param name="sender">
+        /// the button.
+        /// </param>
+        /// <param name="e">
+        /// unused.
+        /// </param>
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.openFileDialog1.Filter = "XML Files (*.xml)|*.xml"; // only loads xml.
+            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string path = this.openFileDialog1.FileName;
+                this.spreadsheet.Load(path);
+                this.editInvoker = new SpreadsheetEngine.EditInvoker(); // reset undo/redo.
             }
         }
     }
