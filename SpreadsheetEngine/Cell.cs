@@ -68,16 +68,6 @@ namespace SpreadsheetEngine
             this.bgColor = 0xFFFFFFFF;
         }
 
-        public Cell()
-        {
-            this.rowindex = -1;
-            this.columnindex = -1;
-            this.text = string.Empty;
-            this.value = string.Empty;
-            this.dependentCells = new List<Cell> { };
-            this.bgColor = 0xFFFFFFFF;
-        }
-
         /// <summary>
         /// This is the list of subsribers that will be notified when text/value is changed.
         /// </summary>
