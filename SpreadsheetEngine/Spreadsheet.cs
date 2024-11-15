@@ -12,10 +12,14 @@ namespace SpreadsheetEngine
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data;
+    using System.IO;
     using System.Linq;
+    using System.Runtime;
     using System.Runtime.ExceptionServices;
+    using System.Runtime.Remoting.Messaging;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Xml;
 
     /// <summary>
     /// Spreadsheet class, will hold 2d array of BasicCells. This is also where we will evaluate cell operations.
@@ -95,6 +99,121 @@ namespace SpreadsheetEngine
             else
             {
                 return null; // cell is outside of range.
+            }
+        }
+
+        /// <summary>
+        /// saves the current spreadsheet to an xml file.
+        /// </summary>
+        /// <param name="filePath">
+        /// file that we are saving spreadsheet to.
+        /// </param>
+        public void Save(string filePath)
+        {
+            // covert from spreadsheet to xml.
+            int rowIndex = 0;
+            int colIndex = 0;
+
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true, // we want indented xml for file for readabilty.
+            };
+
+            using (XmlWriter xmlWriter = XmlWriter.Create(filePath, settings))
+            {
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("spreadsheet"); // first element.
+
+                for (rowIndex = 0; rowIndex < this.rowCount; rowIndex++) // iterate through the spreadsheet.
+                {
+                    for (colIndex = 0; colIndex < this.ColumnCount; colIndex++)
+                    {
+                        // if spreadsheet cell has a changed from default attribute, then add to xml.
+                        if (this.spreadsheet[rowIndex, colIndex].Text != string.Empty || this.spreadsheet[rowIndex, colIndex].BGColor != 0xFFFFFFFF)
+                        {
+                            // some property has been changed, so we add to xml.
+                            xmlWriter.WriteStartElement("cell");
+                            xmlWriter.WriteAttributeString("name", this.spreadsheet[rowIndex, colIndex].GetCellName());
+                            xmlWriter.WriteElementString("bgcolor", this.spreadsheet[rowIndex, colIndex].BGColor.ToString());
+                            xmlWriter.WriteElementString("text", this.spreadsheet[rowIndex, colIndex].Text.ToString());
+                            xmlWriter.WriteEndElement();
+                        }
+                    }
+                }
+
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+            }
+        }
+
+        /// <summary>
+        /// This will load an xml file into the spreadsheet file.
+        /// </summary>
+        /// <param name="filePath">
+        /// the filepath that we are loading the xml file from.
+        /// </param>
+        public void Load(string filePath)
+        {
+            // need to remove all events?.
+            // need to reinitilize spreadsheet
+            this.InitializeSpreadsheet();
+            int rowIndex = 0;
+            int colIndex = 0;
+            Cell curCell = null;
+
+            // convert from xml to spreadsheet.
+            using (XmlReader xmlReader = XmlReader.Create(filePath))
+            {
+                try
+                {
+                    while (xmlReader.Read())
+                    {
+                        if (xmlReader.NodeType == XmlNodeType.Element)
+                        {
+                            if (xmlReader.Name == "cell")
+                            {
+                                string name = xmlReader.GetAttribute("name");
+                                colIndex = name[0] - 'A'; // to convert A to 0.convert user input of example 3 to 2.
+                                string rowIndexString = name.Substring(1);
+                                if (int.TryParse(rowIndexString, out rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
+                                {
+                                    rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
+                                    curCell = this.GetCell(rowIndex, colIndex);
+                                }
+                            }
+                            else if (xmlReader.Name == "bgcolor") // test to see if this is bgcolor element.
+                            {
+                                xmlReader.Read();
+                                if (xmlReader.Value != string.Empty && uint.TryParse(xmlReader.Value.Trim(), out uint newBGColor) && curCell != null)
+                                {
+                                    // if value can be parsed and the cell is initilized, then set to color.
+                                    curCell.BGColor = newBGColor;
+                                }
+                                else
+                                {
+                                    throw new Exception("BGColor value could not be parsed or the cell was null.");
+                                }
+                            }
+                            else if (xmlReader.Name == "text") // test to see if this is bgcolor element.
+                            {
+                                xmlReader.Read();
+                                if (xmlReader.Value != string.Empty && curCell != null)
+                                {
+                                    // if value can be parsed and the cell is initilized, then value set to text.
+                                    curCell.Text = xmlReader.Value.Trim();
+                                }
+                                else
+                                {
+                                    throw new Exception("Text could not be inputted since cell was null.");
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"LOAD ERROR:: {ex.Message}");
+                }
             }
         }
 

@@ -68,6 +68,16 @@ namespace SpreadsheetEngine
             this.bgColor = 0xFFFFFFFF;
         }
 
+        public Cell()
+        {
+            this.rowindex = -1;
+            this.columnindex = -1;
+            this.text = string.Empty;
+            this.value = string.Empty;
+            this.dependentCells = new List<Cell> { };
+            this.bgColor = 0xFFFFFFFF;
+        }
+
         /// <summary>
         /// This is the list of subsribers that will be notified when text/value is changed.
         /// </summary>
@@ -149,10 +159,31 @@ namespace SpreadsheetEngine
                 else
                 {
                     // text is actually being changed.
-                    this.text = value;
+                    if (value == null)
+                    {
+                        this.text = string.Empty; // for the sake of not always throwing exceptions, set to string empty instead of null.
+                    }
+                    else
+                    {
+                        this.text = value;
+                    }
+
                     this.OnPropertyChanged("Text");
                 }
             }
+        }
+
+        /// <summary>
+        /// Used to get the cell name for the xml.
+        /// </summary>
+        /// <returns>
+        /// the cell name as it will appear in the spreadsheet application.
+        /// </returns>
+        public string GetCellName()
+        {
+            string rowIndex = (this.RowIndex + 1).ToString();
+            string colIndex = ((char)(this.ColumnIndex + 65)).ToString();
+            return colIndex + rowIndex;
         }
 
         /// <summary>

@@ -33,12 +33,16 @@ namespace Spreadsheet_Emily_Porter
             hw4demo = new Button();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
+            saveToolStripMenuItem = new ToolStripMenuItem();
+            loadToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
+            undoToolStripMenuItem = new ToolStripMenuItem();
+            redoToolStripMenuItem = new ToolStripMenuItem();
             cellToolStripMenuItem = new ToolStripMenuItem();
             changeBackgroundColourToolStripMenuItem = new ToolStripMenuItem();
             colorDialog1 = new ColorDialog();
-            undoToolStripMenuItem = new ToolStripMenuItem();
-            redoToolStripMenuItem = new ToolStripMenuItem();
+            openFileDialog1 = new OpenFileDialog();
+            saveFileDialog1 = new SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -80,9 +84,24 @@ namespace Spreadsheet_Emily_Porter
             // 
             // fileToolStripMenuItem
             // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, loadToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
+            // 
+            // saveToolStripMenuItem
+            // 
+            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            saveToolStripMenuItem.Size = new Size(224, 26);
+            saveToolStripMenuItem.Text = "Save";
+            saveToolStripMenuItem.Click += SaveToolStripMenuItem_Click;
+            // 
+            // loadToolStripMenuItem
+            // 
+            loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            loadToolStripMenuItem.Size = new Size(224, 26);
+            loadToolStripMenuItem.Text = "Load";
+            loadToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
             // 
@@ -90,10 +109,20 @@ namespace Spreadsheet_Emily_Porter
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(49, 24);
             editToolStripMenuItem.Text = "Edit";
+            // 
+            // undoToolStripMenuItem
+            // 
+            undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            undoToolStripMenuItem.Size = new Size(224, 26);
+            undoToolStripMenuItem.Text = "Undo";
             undoToolStripMenuItem.Click += UndoButton_Click;
+            // 
+            // redoToolStripMenuItem
+            // 
+            redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            redoToolStripMenuItem.Size = new Size(224, 26);
+            redoToolStripMenuItem.Text = "Redo";
             redoToolStripMenuItem.Click += RedoButton_Click;
-
-
             // 
             // cellToolStripMenuItem
             // 
@@ -109,17 +138,14 @@ namespace Spreadsheet_Emily_Porter
             changeBackgroundColourToolStripMenuItem.Text = "Change Background Colour";
             changeBackgroundColourToolStripMenuItem.Click += ChangeBackgroundColourToolStripMenuItem_Click;
             // 
-            // undoToolStripMenuItem
+            // openFileDialog1
             // 
-            undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            undoToolStripMenuItem.Size = new Size(224, 26);
-            undoToolStripMenuItem.Text = "Undo";
+            openFileDialog1.FileName = "openFileDialog1";
+            // openFileDialog1.FileOk += OpenFileDialog1_FileOk;
             // 
-            // redoToolStripMenuItem
+            // saveFileDialog1
             // 
-            redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            redoToolStripMenuItem.Size = new Size(224, 26);
-            redoToolStripMenuItem.Text = "Redo";
+            // saveFileDialog1.FileOk += SaveFileDialog1_FileOk;
             // 
             // Form1
             // 
@@ -151,5 +177,9 @@ namespace Spreadsheet_Emily_Porter
         private ColorDialog colorDialog1;
         private ToolStripMenuItem undoToolStripMenuItem;
         private ToolStripMenuItem redoToolStripMenuItem;
+        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem loadToolStripMenuItem;
+        private OpenFileDialog openFileDialog1;
+        private SaveFileDialog saveFileDialog1;
     }
 }
