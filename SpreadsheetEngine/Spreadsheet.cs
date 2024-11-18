@@ -245,7 +245,7 @@ namespace SpreadsheetEngine
                         curCell.Value = "!ERROR!";
                         throw new ArgumentException("Expression Tree could not be formed.");
 
-                        /// return;
+                        // return;
                     }
 
                     Dictionary<string, double> variables = tree.GetVariableNames();
@@ -269,18 +269,17 @@ namespace SpreadsheetEngine
                                 }
                                 else
                                 {
-                                    // TODO throw error;
                                     if (variableCell.Value == string.Empty)
                                     {
-                                        curCell.Value = string.Empty;
+                                        // curCell.Value = string.Empty;
+                                        tree.SetVariable(item.Key, 0); // set the value of varibale.
                                     }
                                     else
                                     {
                                         curCell.Value = variableCell.Value;
+                                        Console.WriteLine(item.Key + "unable to be found");
+                                        return;
                                     }
-
-                                    Console.WriteLine(item.Key + "unable to be found");
-                                    return;
                                 }
                             }
                             else
@@ -415,7 +414,7 @@ namespace SpreadsheetEngine
             {
                 foreach (Cell cell in curCell.DependentCells)
                 {
-                    if (cell.Text[0] == '=')
+                    if (cell.Text!= string.Empty && cell.Text[0] == '=')
                     {
                         this.Evaluate(cell);
                     }

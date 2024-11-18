@@ -378,5 +378,16 @@ namespace SpreadsheetTests
             this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[0, 1]);
             Assert.That(this.testNormal.GetCell(0, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
         }
+
+        /// <summary>
+        /// if a cell exists but has no value, it should return 0.
+        /// </summary>
+        [Test]
+        public void ExistingNullCellTest()
+        {
+            this.testNormal.GetSpreadsheet()[0, 1].Text = "=A1";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[0, 1]);
+            Assert.That(this.testNormal.GetCell(0, 1).Value, Is.EqualTo("0"));
+        }
     }
 }
