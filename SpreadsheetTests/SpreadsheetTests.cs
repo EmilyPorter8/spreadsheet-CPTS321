@@ -186,7 +186,7 @@ namespace SpreadsheetTests
         {
             this.testNormal.GetSpreadsheet()[1, 1].Text = "=Z3";
             this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
-            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!ERROR!"));
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace SpreadsheetTests
         {
             this.testNormal.GetSpreadsheet()[1, 1].Text = "=potato";
             this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
-            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!ERROR!"));
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
         }
 
         /// <summary>

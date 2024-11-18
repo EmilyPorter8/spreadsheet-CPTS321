@@ -233,20 +233,23 @@ namespace SpreadsheetEngine
             // will add future implementation of operators here.
             if (curCell.Text.Length >= 2 && curCell.Text[0] == '=')
             {
-                // grab the actual expression.
-                string expression = curCell.Text.Substring(1);
-                ExpressionTree tree = new SpreadsheetEngine.ExpressionTree(expression);
-                if (tree.IsRootNull())
-                {
-                    // TODO : this should be an exception handeling thing
-                    Console.WriteLine("Please enter new expression.");
-                    curCell.Value = "!ERROR!";
-                    return;
-                }
-
-                Dictionary<string, double> variables = tree.GetVariableNames();
                 try
                 {
+                    // grab the actual expression.
+                    string expression = curCell.Text.Substring(1);
+                    ExpressionTree tree = new SpreadsheetEngine.ExpressionTree(expression);
+                    if (tree.IsRootNull())
+                    {
+                        // this should be an exception handeling thing
+                        Console.WriteLine("Please enter new expression.");
+                        curCell.Value = "!ERROR!";
+                        throw new ArgumentException("Expression Tree could not be formed.");
+
+                        /// return;
+                    }
+
+                    Dictionary<string, double> variables = tree.GetVariableNames();
+
                     foreach (var item in variables)
                     {
                         // only the initilization to cell ID
@@ -302,14 +305,19 @@ namespace SpreadsheetEngine
                         curCell.Value = tree.Evaluate().ToString();
                     }
                 }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Evaluation error: {ex.Message}");
+                    curCell.Value = "!INVALID EXPRESSION!";
+                }
                 catch (IndexOutOfRangeException ex)
                 {
                     Console.WriteLine($"Evaluation error: {ex.Message}");
-                    curCell.Value = "!ERROR!";
+                    curCell.Value = "!DOES NOT EXIST!";
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Unexpected error: {ex.Message}");
+                    Console.WriteLine($"Unexpected error in evaluation: {ex.Message}");
                     curCell.Value = "!ERROR!";
                 }
             }
