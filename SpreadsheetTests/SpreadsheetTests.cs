@@ -389,5 +389,27 @@ namespace SpreadsheetTests
             this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[0, 1]);
             Assert.That(this.testNormal.GetCell(0, 1).Value, Is.EqualTo("0"));
         }
+
+        /// <summary>
+        /// this tests self reference.
+        /// </summary>
+        [Test]
+        public void SelfReferenceTest()
+        {
+            this.testNormal.GetSpreadsheet()[0, 0].Text = "=A1";
+            Assert.That(this.testNormal.GetCell(0, 0).Value, Is.EqualTo("!SELF REFERENCE!"));
+        }
+
+        /// <summary>
+        /// this tests self reference.
+        /// </summary>
+        [Test]
+        public void CircularReferenceTest()
+        {
+            this.testNormal.GetSpreadsheet()[0, 0].Text = "=A2";
+            this.testNormal.GetSpreadsheet()[1, 0].Text = "=A1";
+            Assert.That(this.testNormal.GetCell(1, 0).Value, Is.EqualTo("!CIRCULAR REFERENCE!"));
+            Assert.That(this.testNormal.GetCell(0, 0).Value, Is.EqualTo("!CIRCULAR REFERENCE!"));
+        }
     }
 }

@@ -242,7 +242,7 @@ namespace SpreadsheetEngine
                     {
                         // this should be an exception handeling thing
                         Console.WriteLine("Please enter new expression.");
-                        curCell.Value = "!ERROR!";
+                        //curCell.Value = "!ERROR!";
                         throw new ArgumentException("Expression Tree could not be formed.");
 
                         // return;
@@ -258,9 +258,14 @@ namespace SpreadsheetEngine
                         if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
                         {
                             rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
-                            Cell variableCell = this.GetCell(rowIndex, columnIndex);
+                            Cell variableCell = this.GetCell(rowIndex, columnIndex); 
                             if (variableCell != null)
                             {
+                                if (variableCell == curCell)
+                                {
+                                    // self reference.
+                                    throw new ArgumentException("Expression contained self reference.");
+                                }
                                 curCell.AddDependency(variableCell); // add the variable to the dependency list.
                                 variableCell.PropertyChanged += curCell.OnDependencyChanged; // subscribe cur cell to variable cell.
                                 if (double.TryParse(variableCell.Value, out double value))
@@ -284,13 +289,13 @@ namespace SpreadsheetEngine
                             }
                             else
                             {
-                                // curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                                // row and column index are out of range, so error.
                                 throw new IndexOutOfRangeException("variable row and column index are out of range, so error.");
                             }
                         }
                         else
                         {
-                            // curCell.Value = "!ERROR!"; // row index doesnt fit format, so error.
+                            // row index doesnt fit format, so error.
                             throw new IndexOutOfRangeException("Current cell is out of bounds.");
                         }
                     }
@@ -307,7 +312,18 @@ namespace SpreadsheetEngine
                 catch (ArgumentException ex)
                 {
                     Console.WriteLine($"Evaluation error: {ex.Message}");
-                    curCell.Value = "!INVALID EXPRESSION!";
+                    if (ex.Message == "Expression Tree could not be formed.")
+                    {
+                        curCell.Value = "!INVALID EXPRESSION!";
+                    }
+                    else if (ex.Message == "Expression contained self reference.")
+                    {
+                        curCell.Value = "!SELF REFERENCE!";
+                    }
+                    else
+                    {
+                        curCell.Value = "!ERROR!";
+                    }
                 }
                 catch (IndexOutOfRangeException ex)
                 {
