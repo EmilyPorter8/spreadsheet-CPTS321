@@ -301,6 +301,10 @@ namespace Spreadsheet_Emily_Porter
                 string path = this.openFileDialog1.FileName;
                 this.spreadsheet.Load(path);
                 this.editInvoker = new SpreadsheetEngine.EditInvoker(); // reset undo/redo.
+                this.undoToolStripMenuItem.Enabled = false;
+                this.undoToolStripMenuItem.Text = "Undo";
+                this.redoToolStripMenuItem.Enabled = false;
+                this.redoToolStripMenuItem.Text = "Redo";
             }
         }
     }
