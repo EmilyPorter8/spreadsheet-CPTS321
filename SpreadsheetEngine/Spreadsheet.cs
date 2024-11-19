@@ -218,6 +218,46 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
+        /// go through variable cellls dependent cells to make sure 
+        /// </summary>
+        /// <param name="curCell">
+        /// og cell.
+        /// </param>
+        /// <param name="variableCell">
+        /// what we are testing.
+        /// </param>
+        /// <returns>
+        /// return false if circular, true if non circular.
+        /// </returns>
+        private bool CheckCircular(Cell curCell, Cell variableCell)
+        {
+            if (variableCell.DependentCells != null)
+            {
+                foreach (Cell dependent in variableCell.DependentCells)
+                {
+                    // recursive call.
+                    if (dependent == curCell) // ahhhh circular
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        if (this.CheckCircular(curCell, dependent) == false)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        /// <summary>
         /// takes current cell, cehcks if the cell text is the right size. Then, convert user
         /// input to correct interger indexes, if it is =(letter)(int) format. From there,
         /// take value from named cell and set it to current cell.
@@ -240,12 +280,8 @@ namespace SpreadsheetEngine
                     ExpressionTree tree = new SpreadsheetEngine.ExpressionTree(expression);
                     if (tree.IsRootNull())
                     {
-                        // this should be an exception handeling thing
                         Console.WriteLine("Please enter new expression.");
-                        //curCell.Value = "!ERROR!";
                         throw new ArgumentException("Expression Tree could not be formed.");
-
-                        // return;
                     }
 
                     Dictionary<string, double> variables = tree.GetVariableNames();
@@ -266,8 +302,18 @@ namespace SpreadsheetEngine
                                     // self reference.
                                     throw new ArgumentException("Expression contained self reference.");
                                 }
+
+                                if (variableCell.DependentCells != null) // want to iterate through dependent cell to make sure none of them are circular.
+                                {
+                                    if (this.CheckCircular(curCell, variableCell) == false)
+                                    {
+                                        throw new ArgumentException("Expression contained circular reference.");
+                                    }
+                                }
+
                                 curCell.AddDependency(variableCell); // add the variable to the dependency list.
                                 variableCell.PropertyChanged += curCell.OnDependencyChanged; // subscribe cur cell to variable cell.
+
                                 if (double.TryParse(variableCell.Value, out double value))
                                 {
                                     tree.SetVariable(item.Key, value); // set the value of varibale.
@@ -319,6 +365,10 @@ namespace SpreadsheetEngine
                     else if (ex.Message == "Expression contained self reference.")
                     {
                         curCell.Value = "!SELF REFERENCE!";
+                    }
+                    else if (ex.Message == "Expression contained circular reference.")
+                    {
+                        curCell.Value = "!CIRCULAR REFERENCE!";
                     }
                     else
                     {
@@ -414,6 +464,7 @@ namespace SpreadsheetEngine
             Cell curCell = sender as Cell; // caste sender as a cell.
             if (e.PropertyName == "Text")
             {
+                curCell.RemoveDependencies();
                 if (curCell.Text != string.Empty && curCell.Text[0] == '=') // check if text needs to be evaluated.
                 {
                     this.Evaluate(curCell); // if text needs to be evaluated, call function.
@@ -430,7 +481,7 @@ namespace SpreadsheetEngine
             {
                 foreach (Cell cell in curCell.DependentCells)
                 {
-                    if (cell.Text!= string.Empty && cell.Text[0] == '=')
+                    if (cell.Text != string.Empty && cell.Text[0] == '=')
                     {
                         this.Evaluate(cell);
                     }
