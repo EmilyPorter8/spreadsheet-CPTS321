@@ -218,46 +218,6 @@ namespace SpreadsheetEngine
         }
 
         /// <summary>
-        /// go through variable cellls dependent cells to make sure 
-        /// </summary>
-        /// <param name="curCell">
-        /// og cell.
-        /// </param>
-        /// <param name="variableCell">
-        /// what we are testing.
-        /// </param>
-        /// <returns>
-        /// return false if circular, true if non circular.
-        /// </returns>
-        private bool CheckCircular(Cell curCell, Cell variableCell)
-        {
-            if (variableCell.DependentCells != null)
-            {
-                foreach (Cell dependent in variableCell.DependentCells)
-                {
-                    // recursive call.
-                    if (dependent == curCell) // ahhhh circular
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        if (this.CheckCircular(curCell, dependent) == false)
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                return true;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
         /// takes current cell, cehcks if the cell text is the right size. Then, convert user
         /// input to correct interger indexes, if it is =(letter)(int) format. From there,
         /// take value from named cell and set it to current cell.
@@ -294,7 +254,7 @@ namespace SpreadsheetEngine
                         if (int.TryParse(rowIndexString, out int rowIndex)) // test to see if we can even convert to int, if we can, assign to rowIndex
                         {
                             rowIndex = rowIndex - 1; // if the user input is =A1, what they really want is 0,0
-                            Cell variableCell = this.GetCell(rowIndex, columnIndex); 
+                            Cell variableCell = this.GetCell(rowIndex, columnIndex);
                             if (variableCell != null)
                             {
                                 if (variableCell == curCell)
@@ -402,6 +362,39 @@ namespace SpreadsheetEngine
         internal Cell[,] GetSpreadsheet()
         {
             return this.spreadsheet;
+        }
+
+        /// <summary>
+        /// go through variable cellls dependent cells to make sure curCell isnt in there.
+        /// </summary>
+        /// <param name="curCell">
+        /// og cell.
+        /// </param>
+        /// <param name="variableCell">
+        /// what we are testing.
+        /// </param>
+        /// <returns>
+        /// return false if circular, true if non circular.
+        /// </returns>
+        private bool CheckCircular(Cell curCell, Cell variableCell)
+        {
+            foreach (Cell dependent in variableCell.DependentCells)
+            {
+                // recursive call.
+                if (dependent == curCell) // ahhhh circular
+                {
+                    return false;
+                }
+                else
+                {
+                    if (this.CheckCircular(curCell, dependent) == false) // recursive call.
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
