@@ -186,7 +186,7 @@ namespace SpreadsheetTests
         {
             this.testNormal.GetSpreadsheet()[1, 1].Text = "=Z3";
             this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
-            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!ERROR!"));
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace SpreadsheetTests
         {
             this.testNormal.GetSpreadsheet()[1, 1].Text = "=potato";
             this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
-            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!ERROR!"));
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
         }
 
         /// <summary>
@@ -323,6 +323,93 @@ namespace SpreadsheetTests
             Assert.That(this.testActual.GetCell(0, 0).BGColor, Is.EqualTo(4294934656));
             Assert.That(this.testActual.GetCell(2, 0).Text, Is.EqualTo("=A1+A2"));
             Assert.That(this.testActual.GetCell(2, 0).Value, Is.EqualTo("13"));
+        }
+
+        /// <summary>
+        /// test load exeception, with file that has nothing.
+        /// </summary>
+        [Test]
+        public void ExceptionalLoadTest()
+        {
+            // this.testActual.Load("C:\\Users\\emily\\OneDrive\\Documents\\CPTS 321\\cpts321-emily-porter-hws\\SpreadsheetTests\\testExceptionalLoad.xml");;
+            // Assert.That(this.testActual.Load("C:\\Users\\emily\\OneDrive\\Documents\\CPTS 321\\cpts321-emily-porter-hws\\SpreadsheetTests\\testExceptionalLoad.xml"), Throws.Exception.TypeOf);
+        }
+
+        /// <summary>
+        /// This gives the right errror message if the cell name is bad. Already have test for this, but without updated error message.
+        /// </summary>
+        [Test]
+        public void BadCellNameTest1()
+        {
+            this.testNormal.GetSpreadsheet()[1, 1].Text = "=potato";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
+        }
+
+        /// <summary>
+        /// this tests if an out of range cell gives the right error message.
+        /// </summary>
+        [Test]
+        public void OutOfRangeCellTest1()
+        {
+            this.testNormal.GetSpreadsheet()[1, 1].Text = "=Z3214";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
+        }
+
+        /// <summary>
+        /// this tests a more complicated badly named cell equatiom, if the error message appears corrclty.
+        /// </summary>
+        [Test]
+        public void BadCellNameTest2()
+        {
+            this.testNormal.GetSpreadsheet()[1, 1].Text = "=potato+30*4";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[1, 1]);
+            Assert.That(this.testNormal.GetCell(1, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
+        }
+
+        /// <summary>
+        /// this tests a more complicated out of range cell, if the error message appears corrclty.
+        /// </summary>
+        [Test]
+        public void OutOfRangeCellTest2()
+        {
+            this.testNormal.GetSpreadsheet()[0, 1].Text = "=(Z3214+4)/3";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[0, 1]);
+            Assert.That(this.testNormal.GetCell(0, 1).Value, Is.EqualTo("!DOES NOT EXIST!"));
+        }
+
+        /// <summary>
+        /// if a cell exists but has no value, it should return 0.
+        /// </summary>
+        [Test]
+        public void ExistingNullCellTest()
+        {
+            this.testNormal.GetSpreadsheet()[0, 1].Text = "=A1";
+            this.testNormal.Evaluate(this.testNormal.GetSpreadsheet()[0, 1]);
+            Assert.That(this.testNormal.GetCell(0, 1).Value, Is.EqualTo("0"));
+        }
+
+        /// <summary>
+        /// this tests self reference.
+        /// </summary>
+        [Test]
+        public void SelfReferenceTest()
+        {
+            this.testNormal.GetSpreadsheet()[0, 0].Text = "=A1";
+            Assert.That(this.testNormal.GetCell(0, 0).Value, Is.EqualTo("!SELF REFERENCE!"));
+        }
+
+        /// <summary>
+        /// this tests self reference.
+        /// </summary>
+        [Test]
+        public void CircularReferenceTest()
+        {
+            this.testNormal.GetSpreadsheet()[0, 0].Text = "=A2";
+            this.testNormal.GetSpreadsheet()[1, 0].Text = "=A1";
+            Assert.That(this.testNormal.GetCell(1, 0).Value, Is.EqualTo("!CIRCULAR REFERENCE!"));
+            Assert.That(this.testNormal.GetCell(0, 0).Value, Is.EqualTo("!CIRCULAR REFERENCE!"));
         }
     }
 }

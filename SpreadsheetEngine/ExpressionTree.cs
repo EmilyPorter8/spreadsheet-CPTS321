@@ -190,7 +190,9 @@ namespace SpreadsheetEngine
                             {
                                 // time to pop until (.
                                 bool successParentheses = false;
-                                while (operatorNodes.Count != 0 && successParentheses == false) // pop from operatorNodes until other side of parentheses is found.
+
+                                // pop from operatorNodes until other side of parentheses is found.
+                                while (operatorNodes.Count != 0 && successParentheses == false)
                                 {
                                     char op = operatorNodes.Pop(); // take first operator.
                                     if (op == '(')

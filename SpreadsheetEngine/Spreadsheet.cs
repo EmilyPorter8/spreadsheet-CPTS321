@@ -233,20 +233,19 @@ namespace SpreadsheetEngine
             // will add future implementation of operators here.
             if (curCell.Text.Length >= 2 && curCell.Text[0] == '=')
             {
-                // grab the actual expression.
-                string expression = curCell.Text.Substring(1);
-                ExpressionTree tree = new SpreadsheetEngine.ExpressionTree(expression);
-                if (tree.IsRootNull())
-                {
-                    // TODO : this should be an exception handeling thing
-                    Console.WriteLine("Please enter new expression.");
-                    curCell.Value = "!ERROR!";
-                    return;
-                }
-
-                Dictionary<string, double> variables = tree.GetVariableNames();
                 try
                 {
+                    // grab the actual expression.
+                    string expression = curCell.Text.Substring(1);
+                    ExpressionTree tree = new SpreadsheetEngine.ExpressionTree(expression);
+                    if (tree.IsRootNull())
+                    {
+                        Console.WriteLine("Please enter new expression.");
+                        throw new ArgumentException("Expression Tree could not be formed.");
+                    }
+
+                    Dictionary<string, double> variables = tree.GetVariableNames();
+
                     foreach (var item in variables)
                     {
                         // only the initilization to cell ID
@@ -258,37 +257,51 @@ namespace SpreadsheetEngine
                             Cell variableCell = this.GetCell(rowIndex, columnIndex);
                             if (variableCell != null)
                             {
+                                if (variableCell == curCell)
+                                {
+                                    // self reference.
+                                    throw new ArgumentException("Expression contained self reference.");
+                                }
+
+                                if (variableCell.DependentCells != null) // want to iterate through dependent cell to make sure none of them are circular.
+                                {
+                                    if (this.CheckCircular(curCell, variableCell) == false)
+                                    {
+                                        throw new ArgumentException("Expression contained circular reference.");
+                                    }
+                                }
+
                                 curCell.AddDependency(variableCell); // add the variable to the dependency list.
                                 variableCell.PropertyChanged += curCell.OnDependencyChanged; // subscribe cur cell to variable cell.
+
                                 if (double.TryParse(variableCell.Value, out double value))
                                 {
                                     tree.SetVariable(item.Key, value); // set the value of varibale.
                                 }
                                 else
                                 {
-                                    // TODO throw error;
                                     if (variableCell.Value == string.Empty)
                                     {
-                                        curCell.Value = string.Empty;
+                                        // curCell.Value = string.Empty;
+                                        tree.SetVariable(item.Key, 0); // set the value of varibale.
                                     }
                                     else
                                     {
                                         curCell.Value = variableCell.Value;
+                                        Console.WriteLine(item.Key + "unable to be found");
+                                        return;
                                     }
-
-                                    Console.WriteLine(item.Key + "unable to be found");
-                                    return;
                                 }
                             }
                             else
                             {
-                                // curCell.Value = "!ERROR!"; // row and column index are out of range, so error.
+                                // row and column index are out of range, so error.
                                 throw new IndexOutOfRangeException("variable row and column index are out of range, so error.");
                             }
                         }
                         else
                         {
-                            // curCell.Value = "!ERROR!"; // row index doesnt fit format, so error.
+                            // row index doesnt fit format, so error.
                             throw new IndexOutOfRangeException("Current cell is out of bounds.");
                         }
                     }
@@ -302,14 +315,34 @@ namespace SpreadsheetEngine
                         curCell.Value = tree.Evaluate().ToString();
                     }
                 }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Evaluation error: {ex.Message}");
+                    if (ex.Message == "Expression Tree could not be formed.")
+                    {
+                        curCell.Value = "!INVALID EXPRESSION!";
+                    }
+                    else if (ex.Message == "Expression contained self reference.")
+                    {
+                        curCell.Value = "!SELF REFERENCE!";
+                    }
+                    else if (ex.Message == "Expression contained circular reference.")
+                    {
+                        curCell.Value = "!CIRCULAR REFERENCE!";
+                    }
+                    else
+                    {
+                        curCell.Value = "!ERROR!";
+                    }
+                }
                 catch (IndexOutOfRangeException ex)
                 {
                     Console.WriteLine($"Evaluation error: {ex.Message}");
-                    curCell.Value = "!ERROR!";
+                    curCell.Value = "!DOES NOT EXIST!";
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Unexpected error: {ex.Message}");
+                    Console.WriteLine($"Unexpected error in evaluation: {ex.Message}");
                     curCell.Value = "!ERROR!";
                 }
             }
@@ -329,6 +362,39 @@ namespace SpreadsheetEngine
         internal Cell[,] GetSpreadsheet()
         {
             return this.spreadsheet;
+        }
+
+        /// <summary>
+        /// go through variable cellls dependent cells to make sure curCell isnt in there.
+        /// </summary>
+        /// <param name="curCell">
+        /// og cell.
+        /// </param>
+        /// <param name="variableCell">
+        /// what we are testing.
+        /// </param>
+        /// <returns>
+        /// return false if circular, true if non circular.
+        /// </returns>
+        private bool CheckCircular(Cell curCell, Cell variableCell)
+        {
+            foreach (Cell dependent in variableCell.DependentCells)
+            {
+                // recursive call.
+                if (dependent == curCell) // ahhhh circular
+                {
+                    return false;
+                }
+                else
+                {
+                    if (this.CheckCircular(curCell, dependent) == false) // recursive call.
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -391,6 +457,7 @@ namespace SpreadsheetEngine
             Cell curCell = sender as Cell; // caste sender as a cell.
             if (e.PropertyName == "Text")
             {
+                curCell.RemoveDependencies();
                 if (curCell.Text != string.Empty && curCell.Text[0] == '=') // check if text needs to be evaluated.
                 {
                     this.Evaluate(curCell); // if text needs to be evaluated, call function.
@@ -407,7 +474,7 @@ namespace SpreadsheetEngine
             {
                 foreach (Cell cell in curCell.DependentCells)
                 {
-                    if (cell.Text[0] == '=')
+                    if (cell.Text != string.Empty && cell.Text[0] == '=')
                     {
                         this.Evaluate(cell);
                     }
